@@ -10,11 +10,17 @@ require('./DBConn/conn');
 // Define the port where the server will run
 const PORT = 4000;
 
+app.use(express.json());
+
+
 // Define a simple GET route for the root URL ("/")
 // This is used to test if the backend is running
-app.get('/', (req, res) => {
-    res.send('Gym Management System backend is running ✅');
-});
+// app.get('/', (req, res) => {
+//     res.send('Gym Management System backend is running ✅');
+// });
+
+const GymRoutes = require('./Routes/gym');
+app.use('/auth',GymRoutes);
 
 // Start the server and listen on the specified port
 // Once running, it will log the message in the console
