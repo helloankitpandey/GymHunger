@@ -1,5 +1,6 @@
 // Import express framework
 const express = require('express');
+const cookieparser = require('cookie-parser');
 require('dotenv').config();
 
 // Create an instance of an Express application
@@ -10,7 +11,7 @@ require('./DBConn/conn');
 
 // Define the port where the server will run
 const PORT = 4000;
-
+app.use(cookieparser());
 app.use(express.json());
 
 
@@ -21,8 +22,10 @@ app.use(express.json());
 // });
 
 const GymRoutes = require('./Routes/gym');
-app.use('/auth',GymRoutes);
+const MembershipRoutes = require('./Routes/membership');
 
+app.use('/auth',GymRoutes);
+app.use('/plans',MembershipRoutes);
 // Start the server and listen on the specified port
 // Once running, it will log the message in the console
 app.listen(PORT, () => {
