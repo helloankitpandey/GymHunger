@@ -3,6 +3,7 @@ const bcrypt = require("bcryptjs");
 const crypto = require("crypto");
 const nodemailer = require("nodemailer");
 
+
 exports.register = async(req,res)=>{
     try {
         const {userName,password,gymName,profilePic,email}=req.body;
