@@ -48,7 +48,7 @@ const Signup = () => {
       <div onClick={handleClose} className="p-2 w-[80%] mt-5 bg-blue-700  mx-auto rounded-lg text-white text-center text-lg hover:bg-blue-400 hover:text-black font-semibold  cursor-pointer">
         Forget Password
       </div>
-      {forgetPassword && <Modal handleClose={handleClose} content={<ForgetPassword />}/> }
+      {forgetPassword && <Modal header="Forget Password" handleClose={handleClose} content={<ForgetPassword />}/> }
     </div>
   );
 };
