@@ -1,4 +1,6 @@
 import React from 'react';
+import Login from '../../Components/Login/login';
+import Signup from '../../Components/Signup/signup';
 
 const Home = () => {
   return (
@@ -7,13 +9,11 @@ const Home = () => {
         Welcome To Gym Managment System
       </div>
       <div className='w-full flex justify-center bg-cover h-[100%] bg-[url("https://wallpapers.com/images/hd/professional-gym-interior-vomd24bjg2wxd65f.jpg")]' >
-        <div className='w-full'>
-            <div className='w-1/3 p-10 mt-20 ml-20 bg-black bg-opacity-70'>
-                <div className='font-sans text-white text-center text-4xl '>
-                    Login
-                </div>
+        <div className='w-full lg:flex gap-32'>
 
-            </div>
+            <Login />
+
+            <Signup />
         </div>
       </div>
       
