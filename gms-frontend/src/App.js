@@ -4,6 +4,7 @@ import Home from './Pages/Home/home';
 import Dashboard from './Pages/Dashboard/dashboard';
 import Sidebar from './Components/Sidebar/sidebar';
 import { useEffect, useState } from 'react';
+import Member from './Pages/Member/member';
 
 function App() {
 
@@ -15,8 +16,11 @@ function App() {
     let isLogedIn = sessionStorage.getItem("isLogin");
     if(isLogedIn){
       setIsLogIn(true);
-      navigate('/dashboard')
+      // navigate('/dashboard')
+    }else{
+      navigate('/')
     }
+    
   },[sessionStorage.getItem("isLogin")])
 
   return (
@@ -28,6 +32,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />}  />
         <Route path='/dashboard' element={<Dashboard />} />
+        <Route path='/member' element={<Member />} />
       </Routes>
     </div>
   );
