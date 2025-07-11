@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import AddIcon from '@mui/icons-material/Add';
 import { Link } from 'react-router-dom';
@@ -8,20 +8,35 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
 import MemberCard from '../../Components/MemberCard/memberCard';
+import Modal from '../../Components/Modal/modal';
+import AddMemberShip from '../../Components/Addmembership/addMemberShip';
+import AddMember from '../../Components/AddMembers/addMembers';
 
 
 const Member = () => {
+
+    const [addMemberShip, setAddMemberShip] = useState(false);
+    const [addMember, setaddMember] = useState(false);
+
+    const handleaddMember = () => {
+        setaddMember(prev => !prev)
+    }
+
+    const handleMemberShip = () => {
+        setAddMemberShip(prev => !prev);
+    }
+
   return (
     <div className='w-3/4 text-black p-5 h-[100vh]'>
 
         {/* block for banner */}
         <div className='border-2 bg-slate-900 flex justify-between w-full text-white rounded-lg p-3 '>
 
-            <div className='border-2  pl-3 pr-3 pt-1 pb-1 rounded-2xl cursor-pointer hover:bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:text-black font-medium' >
+            <div onClick={handleaddMember} className='border-2  pl-3 pr-3 pt-1 pb-1 rounded-2xl cursor-pointer hover:bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:text-black font-medium' >
                 Add Member
                 <PersonAddIcon  className='ml-1 font-medium mb-1' />
             </div>
-            <div className='border-2  pl-3 pr-3 pt-1 pb-1 rounded-2xl cursor-pointer hover:bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:text-black font-medium'>
+            <div onClick={handleMemberShip} className='border-2  pl-3 pr-3 pt-1 pb-1 rounded-2xl cursor-pointer hover:bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:text-black font-medium'>
                 Membership
                 <AddIcon className='ml-1 font-medium mb-1' />
             </div>
@@ -87,6 +102,15 @@ const Member = () => {
             <MemberCard />
 
         </div>
+
+        {
+            addMemberShip && <Modal header="Add MemberShip" handleClose={handleMemberShip} content={<AddMemberShip />} />
+        }
+
+        {/* {
+            addMember && <Modal header="Add New Member" handleClose={handleaddMember} content={<AddMember />} />
+        } */}
+        
 
     </div>
   )
