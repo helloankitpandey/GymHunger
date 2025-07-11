@@ -23,9 +23,13 @@ app.use(express.json());
 
 const GymRoutes = require('./Routes/gym');
 const MembershipRoutes = require('./Routes/membership');
+const MemberRoutes = require('./Routes/member');
 
 app.use('/auth',GymRoutes);
 app.use('/plans',MembershipRoutes);
+app.use('/members',MemberRoutes);
+
+
 // Start the server and listen on the specified port
 // Once running, it will log the message in the console
 app.listen(PORT, () => {
