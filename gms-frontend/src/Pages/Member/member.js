@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import AddIcon from '@mui/icons-material/Add';
 import { Link } from 'react-router-dom';
@@ -17,6 +17,67 @@ const Member = () => {
 
     const [addMemberShip, setAddMemberShip] = useState(false);
     const [addMember, setaddMember] = useState(false);
+
+    // state for pagination
+    const [currentPage, setcurrentPage] = useState(1);
+
+    const [startfrom, setStartfrom] = useState(0);
+    const [endTo, setEndTo] = useState(9);
+    const [totalData, setTotalData] = useState(0);
+    const [limit, setLimit] = useState(9);
+
+    const [noOfPage, setNoOfPage] = useState(0);
+
+    useEffect(() => {
+        fetchData();
+    },[]);
+
+    const fetchData = () => {
+        let totalData = 52;
+        setTotalData(totalData);
+
+        let extraPage = totalData % limit === 0 ? 0 : 1;
+        let totalPage = parseInt(totalData/limit) + extraPage;
+        setNoOfPage(totalPage);
+
+        if(totalData === 0){
+            setStartfrom(-1);
+            setEndTo(0);
+        }else if(totalData < 9){
+            setStartfrom(0);
+            setEndTo(totalData)
+        }
+    }
+
+    // fn for back button in pagination
+    const handleprev = () => {
+        if(currentPage !== 1){
+            let currPage = currentPage - 1;
+            setcurrentPage(currPage);
+            
+            var from = (currPage-1)*9;
+            var to = (currPage*9);
+            setStartfrom(from);
+            setEndTo(to);
+        }
+    }
+
+    const handlenext = () => {
+        if(currentPage !== noOfPage){
+            let currPage = currentPage + 1;
+            setcurrentPage(currPage);
+
+            // var from = (currPage*9) - 9;
+            // var to = (currPage*9);
+            var from = (currPage-1)*9;
+            var to = (currPage*9);
+            if(to>totalData){
+                to = totalData;
+            }
+            setStartfrom(from);
+            setEndTo(to);
+        }
+    }
 
     const handleaddMember = () => {
         setaddMember(prev => !prev)
@@ -60,11 +121,13 @@ const Member = () => {
         <div className='mt-5 text-xl flex justify-between text-slate-900 '>
             <div className='font-mono text-2xl '> Total Members</div>
             <div className='flex gap-5'>
-                <div className='font-mono text-2xl'>1 - 9 of 52 Members</div>
-                <div className={`w-8 h-8 cursor-pointer border-2 flex items-center justify-center hover:text-white hover:bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 `} >
+                <div className='font-mono text-2xl'>
+                    {startfrom + 1} - {endTo} of {totalData} Members
+                    </div>
+                <div onClick={handleprev} className={` ${currentPage === 1 ? 'bg-gray-200 text-gray-300' : null}  w-8 h-8 cursor-pointer border-2 flex items-center justify-center hover:text-white hover:bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 `} >
                     <ChevronLeftIcon />
                 </div>
-                <div className={`w-8 h-8 cursor-pointer border-2 flex items-center justify-center hover:text-white hover:bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 `} >
+                <div onClick={handlenext} className={` ${currentPage === noOfPage ? 'bg-gray-200 text-gray-300' : null}   w-8 h-8 cursor-pointer border-2 flex items-center justify-center hover:text-white hover:bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 `} >
                     <ChevronRightIcon />
                 </div>
             </div>

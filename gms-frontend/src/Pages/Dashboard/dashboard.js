@@ -26,7 +26,12 @@ const Dashboard = () => {
         return () => {
             document.removeEventListener("mousedown", checkIfClickedOutside)
         }
-    })
+    },[accordianDash]);
+
+    // for storing data of pages like monthly or expierd in / inactive
+    const handleOnClickMenu = (value) => {
+        sessionStorage.setItem('func', value);
+    }
 
 
   return (
@@ -60,54 +65,54 @@ const Dashboard = () => {
             </Link>
 
             {/* this is card block */}
-            <div className='w-full h-fit border-2 bg-white rounded-lg cursor-pointer'>
+            <Link onClick={ () => handleOnClickMenu("monthlyJoined")} to={'/specific/monthly'} className='w-full h-fit border-2 bg-white rounded-lg cursor-pointer'>
                 <div className='h-3 rounded-t-lg bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500'>
                 </div>
                 <div className='py-7 px-5 flex-col justify-center items-center w-full text-center rouded-b-lg hover:bg-slate-900 hover:text-white'>
                     <SignalCellularAltIcon sx={{color:"purple", fontSize:"50px"}} />
                     <p className='text-xl my-3 font-semibold font-mono'>Monthly Joined</p>
                 </div>
-            </div>
+            </Link>
 
             {/* this is card block */}
-            <div className='w-full h-fit border-2 bg-white rounded-lg cursor-pointer'>
+            <Link onClick={ () => handleOnClickMenu("threeDaysExpired")} to={'/specific/expire-with-in-3-days'}  className='w-full h-fit border-2 bg-white rounded-lg cursor-pointer'>
                 <div className='h-3 rounded-t-lg bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500'>
                 </div>
                 <div className='py-7 px-5 flex-col justify-center items-center w-full text-center rouded-b-lg hover:bg-slate-900 hover:text-white'>
                     <AccessAlarmIcon sx={{color:"red", fontSize:"50px"}} />
                     <p className='text-xl my-3 font-semibold font-mono'>Expiring with 3 days</p>
                 </div>
-            </div>
+            </Link>
 
             {/* this is card block */}
-            <div className='w-full h-fit border-2 bg-white rounded-lg cursor-pointer'>
+            <Link onClick={ () => handleOnClickMenu("fourTOSevenDaysExpired")} to={'/specific/expire-with-in-4-7-days'} className='w-full h-fit border-2 bg-white rounded-lg cursor-pointer'>
                 <div className='h-3 rounded-t-lg bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500'>
                 </div>
                 <div className='py-7 px-5 flex-col justify-center items-center w-full text-center rouded-b-lg hover:bg-slate-900 hover:text-white'>
                     <AccessAlarmIcon sx={{color:"red", fontSize:"50px"}} />
                     <p className='text-xl my-3 font-semibold font-mono'>Expiring with 4-7 days</p>
                 </div>
-            </div>
+            </Link>
 
             {/* this is card block */}
-            <div className='w-full h-fit border-2 bg-white rounded-lg cursor-pointer'>
+            <Link onClick={ () => handleOnClickMenu("expired")}  to={'/specific/expired'} className='w-full h-fit border-2 bg-white rounded-lg cursor-pointer'>
                 <div className='h-3 rounded-t-lg bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500'>
                 </div>
                 <div className='py-7 px-5 flex-col justify-center items-center w-full text-center rouded-b-lg hover:bg-slate-900 hover:text-white'>
                     <ErrorIcon sx={{color:"red", fontSize:"50px"}} />
                     <p className='text-xl my-3 font-semibold font-mono'>Expired</p>
                 </div>
-            </div>
+            </Link>
 
             {/* this is card block */}
-            <div className='w-full h-fit border-2 bg-white rounded-lg cursor-pointer'>
+            <Link onClick={ () => handleOnClickMenu("inActiveMembers")} to={'/specific/inactive-member'} className='w-full h-fit border-2 bg-white rounded-lg cursor-pointer'>
                 <div className='h-3 rounded-t-lg bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500'>
                 </div>
                 <div className='py-7 px-5 flex-col justify-center items-center w-full text-center rouded-b-lg hover:bg-slate-900 hover:text-white'>
                     <ReportIcon sx={{color:"brown", fontSize:"50px"}} />
                     <p className='text-xl my-3 font-semibold font-mono'>InActive Member</p>
                 </div>
-            </div>
+            </Link>
 
 
 

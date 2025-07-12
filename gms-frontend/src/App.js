@@ -5,6 +5,9 @@ import Dashboard from './Pages/Dashboard/dashboard';
 import Sidebar from './Components/Sidebar/sidebar';
 import { useEffect, useState } from 'react';
 import Member from './Pages/Member/member';
+import Generaluser from './Pages/GeneralUser/generaluser';
+import NotFound from './Pages/NotFound/notFound';
+import MemberDetail from './Pages/MemberDetail/memberDetail';
 
 function App() {
 
@@ -18,6 +21,7 @@ function App() {
       setIsLogIn(true);
       // navigate('/dashboard')
     }else{
+      setIsLogIn(false);
       navigate('/')
     }
     
@@ -30,10 +34,16 @@ function App() {
         isLogIn && <Sidebar />
       }
       <Routes>
+
         <Route path="/" element={<Home />}  />
         <Route path='/dashboard' element={<Dashboard />} />
         <Route path='/member' element={<Member />} />
+        <Route path='/specific/:page' element={<Generaluser />} />
+        <Route path='/member/:id' element={<MemberDetail />} />
+        <Route path='*' element={<NotFound />} />
+
       </Routes>
+
     </div>
   );
 }
