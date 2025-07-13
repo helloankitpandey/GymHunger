@@ -2,10 +2,18 @@ import React, { useState } from "react";
 import './signup.css';
 import Modal from "../Modal/modal";
 import ForgetPassword from "../ForgetPassword/forgetpassword";
+import axios from 'axios';
+import Stack from '@mui/material/Stack';
+import LinearProgress from '@mui/material/LinearProgress';
 
 const Signup = () => {
 
     const [forgetPassword, setForgetPassword] = useState(false);
+
+    // for loading img
+    const [loaderImg, setLoaderImg] = useState(false);
+
+
     // formhandling of signup form
     const [inputField, setInputField] = useState({
       gynName: "",
@@ -22,6 +30,31 @@ const Signup = () => {
 
     const handleClose = () => {
         setForgetPassword(prev => !prev);
+    }
+
+
+    // for uploading img on cloundnary
+    const uploadImage = async(event) => {
+
+      setLoaderImg(true)
+
+      const files = event.target.files;
+      const data = new FormData();
+      data.append('file', files[0]);
+
+      // cloud name -> dw7n1fvp0
+      data.append('upload_preset', 'gym-managment');
+
+      try {
+        const response = await axios.post("https://api.cloudinary.com/v1_1/dw7n1fvp0/image/upload", data);
+        console.log(response);
+        const imageUrl = response.data.url;
+        setInputField({...inputField, ['profilPic']: imageUrl});
+        setLoaderImg(false)
+      } catch (error) {
+        console.log(error);
+        setLoaderImg(false)
+      }
     }
 
 
@@ -58,11 +91,23 @@ const Signup = () => {
         className="w-full mb-10 p-2 rounded-lg "
         placeholder="Enter Password"
       />
-      <input type="file" className="w-full mb-10 p-2 rounded-lg " />
+
+
+      <input onChange={(event) => {uploadImage(event)}} type="file" className="w-full mb-10 p-2 rounded-lg " />
+
+      {
+        loaderImg &&  <Stack sx={{ width: '100%', color: 'grey.500' }} spacing={2}>
+                      <LinearProgress color="secondary" />
+                      </Stack>
+      }
+
+
       <img
         src={inputField.profilPic}
         className="h-[200px] w-[250px] mb-10 "
       />
+
+
       <div className="p-2 w-[80%] bg-blue-700  mx-auto rounded-lg text-white text-center text-lg hover:bg-blue-400 hover:text-black font-semibold  cursor-pointer">
         Register
       </div>
