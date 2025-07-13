@@ -4,6 +4,11 @@ import { useNavigate } from "react-router-dom";
 import Switch from "react-switch";
 
 const MemberDetail = () => {
+
+  
+  const [inputField, setInputField] = useState();
+
+
   const [status, setStatus] = useState("Pending");
   const [renew, setRenew] = useState(false);
 
