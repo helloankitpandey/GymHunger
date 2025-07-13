@@ -260,3 +260,57 @@ exports.getMemberDetails = async(req,res)=>{
 }
 
 
+
+exports.changeStatus = async(req,res)=>{
+    try {
+        const {id}= req.params;
+        const {status}=req.body;
+        const member = await Member.findById({_id:id,gym:req.gym._id});
+        if(!member){
+            return res.status(400).json({
+                error:"No Such Member "
+            })
+        }
+        member.status = status;
+        await member.save();
+        res.status(200).json({
+            message: "Status Changed Successfully"
+        })
+    } catch (error) {
+         res.status(500).json({
+            error: "Server Error"
+        });
+    }
+}
+
+
+
+exports.updateMemberPlan = async(req,res)=>{
+    try {
+        const {membership} = req.body;
+        const {id}= req.params;  
+        const memberShip = await Membership.findOne({gym:req.gym._id,_id:membership});
+        if(membership){
+             let getMonth = memberShip.months;
+             let today = new Date();
+             let nextBillDate = addMonthsToDate(getMonth,today);
+             const member  = await Member.findOne({gym:req.gym._id,_id:id});
+             if(!member){
+                return res.status(409).json({"error":"No such Member is there"});
+             }
+             member.nextBillDate=nextBillDate;
+             member.lastPayment = today;
+             await member.save();
+             res.status(200).json({
+                message: "Member Renewed   Successfully",
+                member
+             })
+        }else{
+            return res.status(409).json({"error":"No such membership are there"});
+        }
+    } catch (error) {
+        res.status(500).json({
+            error: "Server Error"
+        }); 
+    }
+}
