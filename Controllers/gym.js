@@ -2,7 +2,8 @@ const Gym = require("../Modals/gym")
 const bcrypt = require("bcryptjs");
 const crypto = require("crypto");
 const nodemailer = require("nodemailer");
-const jwt = require('jsonwebtoken')
+const jwt = require('jsonwebtoken');
+
 
 exports.register = async(req,res)=>{
     try {
@@ -25,6 +26,9 @@ exports.register = async(req,res)=>{
             })
         }
     } catch (error) {
+        // Added console for debug
+        // console.log(error);
+        
         res.status(500).json({
             error:"Server Error"
         })
@@ -49,20 +53,25 @@ exports.login = async(req,res)=>{
             //  another way 
             // const hashedPassword = await bcrypt.compare(password,gym.password);
 
-             const token = jwt.sign({gym_id:gym._id},process.env.JWT_SECRET_KEY);
+            const token = jwt.sign({gym_id:gym._id},process.env.JWT_SECRET_KEY);
             // console.log("jwtToken:",token);
              res.cookie("cookie-token",token,cookieOptions) ;
 
             res.json({
                 message:"Logged in successfully!!",
                 success:"true",
-                gym
+                gym,
+                token
             })
         }else{
             res.status(400).json({error:"Invalid credentials"});
         }
     } catch (error) {
+        // Added console for debug
+        // console.log(error);
+        
         res.status(500).json({
+            
             error:"Server Error"
         })
     }
@@ -129,6 +138,8 @@ exports.sendOtp = async(req,res)=>{
             return res.status(404).json({error:"Gym not Found!!"});
         }
     } catch (error) {
+        // Added console for debug
+        // console.log(error);
         res.status(500).json({
             error : " server Error"
         })

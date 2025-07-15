@@ -2,9 +2,17 @@
 const express = require('express');
 const cookieparser = require('cookie-parser');
 require('dotenv').config();
+// require cors
+const cors = require('cors');
 
 // Create an instance of an Express application
 const app = express();
+
+// resolving cors error
+app.use(cors({
+    origin: 'http://localhost:3000',
+    credentials: true
+}))
 
 // Import database connection (MongoDB connection using Mongoose)
 require('./DBConn/conn');
