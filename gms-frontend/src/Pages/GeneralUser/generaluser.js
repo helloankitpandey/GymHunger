@@ -2,10 +2,12 @@ import React, { useEffect, useState } from "react";
 import { Link } from 'react-router-dom';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import MemberCard from '../../Components/MemberCard/memberCard'
+import { getMonthlyJoined,threeDayExpire ,fourSevenDaysexpire,expired,inActive} from "./data";
 
 const Generaluser = () => {
 
   const [header, setHeader] = useState("");
+  const [data,setData] = useState([]);
 
   useEffect(() => {
     const func = sessionStorage.getItem('func');
@@ -18,26 +20,38 @@ const Generaluser = () => {
       case "monthlyJoined":
 
           setHeader("Monthly Joined Members")
+         
+          var  datas = await getMonthlyJoined();
+          //  console.log(datas);
+          setData(datas.members);
           break;
       
       case "threeDaysExpired":
 
           setHeader("Expiring In 3 Days Members")
+          var datas = await threeDayExpire();
+          setData(datas.members);
           break;
       
       case "fourTOSevenDaysExpired":
 
           setHeader("Expiring In 4-7 Days Members")
+          var datas = await fourSevenDaysexpire();
+          setData(datas.members);
           break;
 
       case "expired":
 
           setHeader("Expired Members")
+           var datas = await expired();
+          setData(datas.members);
           break;
 
       case "inActiveMembers":
 
           setHeader("InActive Members")
+           var datas = await inActive();
+          setData(datas.members);
           break;
 
     }
@@ -58,11 +72,11 @@ const Generaluser = () => {
       </div>
 
       <div className="bg-slate-100 p-5 mt-5 rounded-lg grid grid-cols-3 gap-2 overflow-x-auto h-[80%]">
-          <MemberCard />
-          <MemberCard />
-          <MemberCard />
-          <MemberCard />
-          <MemberCard />
+          {
+            data.map((item, index) => {
+              return <MemberCard item={item} />
+            })
+          }
       </div>
 
 
