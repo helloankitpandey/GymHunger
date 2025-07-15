@@ -131,7 +131,7 @@ const Signup = () => {
 
       <ToastContainer />
 
-      {forgetPassword && <Modal header="Forget Password" handleClose={handleClose} content={<ForgetPassword />}/> }
+      {forgetPassword && <Modal header="Forget Password" handleClose={handleClose} content={<ForgetPassword handleClose={handleClose} />}/> }
     </div>
   );
 };

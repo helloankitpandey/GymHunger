@@ -167,7 +167,7 @@ const Member = () => {
         </div>
 
         {
-            addMemberShip && <Modal header="Add MemberShip" handleClose={handleMemberShip} content={<AddMemberShip />} />
+            addMemberShip && <Modal header="Add MemberShip" handleClose={handleMemberShip} content={<AddMemberShip handleClose={handleMemberShip} />} />
         }
 
         {

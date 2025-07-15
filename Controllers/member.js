@@ -80,6 +80,9 @@ exports.registerMember= async(req,res)=>{
             })
          }
     } catch (error) {
+        // for debugging
+        // console.log(error);
+        
         res.status(500).json({
             error: "Server Error"
         });

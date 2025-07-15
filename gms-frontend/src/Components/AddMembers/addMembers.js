@@ -1,7 +1,8 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Stack from '@mui/material/Stack';
 import LinearProgress from '@mui/material/LinearProgress';
+import { toast, ToastContainer } from "react-toastify";
 
 
 const AddMember = () => {
@@ -11,11 +12,18 @@ const AddMember = () => {
     address: "",
     joiningDate: "",
     memberShip: "",
-    profilPic: "https://colorlib.com/wp/wp-content/uploads/sites/2/klipsan-squarespace-gym-website.jpg",
+    profilePic: "https://colorlib.com/wp/wp-content/uploads/sites/2/klipsan-squarespace-gym-website.jpg",
   });
 
   // for loading img
   const [loaderImg, setLoaderImg] = useState(false);
+
+  // for hadling membership state
+  const [membershipList, setMembershipList] = useState([]);
+
+  // for getting selected's option value
+  const [selectedOption, setSelectedOption] = useState("");
+
 
   const handleOnChange = (event, name) => {
     setInputField({ ...inputField, [name]: event.target.value });
@@ -41,7 +49,7 @@ const AddMember = () => {
       );
       console.log(response);
       const imageUrl = response.data.url;
-      setInputField({ ...inputField, ["profilPic"]: imageUrl });
+      setInputField({ ...inputField, ["profilePic"]: imageUrl });
 
       setLoaderImg(false)
 
@@ -50,6 +58,52 @@ const AddMember = () => {
       setLoaderImg(false)
     }
   };
+
+  const fetchMembership = async() => {
+    await axios.get("http://localhost:4000/plans/get-membership", {withCredentials: true}).then((res) => {
+      setMembershipList(res.data.membership);
+      if(res.data.membership.length === 0){
+        return toast.error("No any MemberShip Added yet",{
+          className: "text-lg"
+        })
+      }else{
+        let a = res.data.membership[0]._id;
+        setSelectedOption(a);
+        setInputField({...inputField, membership: a});
+      }
+
+    }).catch(err => {
+      console.log(err);
+    })
+  }
+
+
+  useEffect(() => {
+    console.log(inputField);
+    
+    fetchMembership();
+  },[])
+
+  // for option selection and storing in memship of inputfield
+  const handleOnChangeSelect = (event) => {
+    let value = event.target.value;
+    setSelectedOption(value);
+    setInputField({...inputField, membership: value})
+  }
+
+  // for registration of new member
+  const handleRegisterButton = async() => {
+    await axios.post("http://localhost:4000/members/register-member", inputField, {withCredentials: true}).then((res) => {
+      toast.success("Member Added Successfully");
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
+    }).catch(err => {
+      console.log(err);
+      toast.error("Something Wrong Happened")
+    })
+  }
+
 
   return (
     <div className="text-black">
@@ -92,16 +146,17 @@ const AddMember = () => {
         />
 
         <select
-          value={inputField.memberShip}
-          onChange={(event) => {
-            handleOnChange(event, "memberShip");
-          }}
+          value={selectedOption}
+          onChange={handleOnChangeSelect}
           className="border-2 w-[90%] h-12 pt-2 pb-2 border-slate-400 rounded-md placeholder:text-gray"
         >
-          <option>1 Month MemberShip</option>
-          <option>2 Month MemberShip</option>
-          <option>3 Month MemberShip</option>
-          <option>4 Month MemberShip</option>
+          {
+            membershipList.map((item, index) => {
+              return(
+                <option key={index} value={item._id} > {item.months} Months MemberShip </option>
+              )
+            })
+          }
         </select>
 
         <input onChange={(e) => {uploadImage(e)}} type="file" />
@@ -110,7 +165,7 @@ const AddMember = () => {
 
         <div className="w-1/4">
           <img
-            src={inputField.profilPic}
+            src={inputField.profilePic}
             className="h-full w-full rounded-full"
           />
           {
@@ -120,10 +175,13 @@ const AddMember = () => {
           }
           </div>
 
-        <div className="border-2 p-3 w-28 tet-lg h-14 text-center  bg-slate-900 text-white rounded-xl cursor-pointer hover:bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500">
+        <div onClick={handleRegisterButton} className="border-2 p-3 w-28 tet-lg h-14 text-center  bg-slate-900 text-white rounded-xl cursor-pointer hover:bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500">
           Register
         </div>
       </div>
+
+      <ToastContainer />
+
     </div>
   );
 };
