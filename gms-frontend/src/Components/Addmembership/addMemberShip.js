@@ -22,7 +22,7 @@ const AddMemberShip = ({handleClose}) => {
         withCredentials: true,
       })
       .then((res) => {
-        console.log(res);
+        // console.log(res);
         setMembership(res.data.membership);
         toast.success(res.data.membership.length+" Membership Fetched");
       })
