@@ -7,7 +7,7 @@ const Modal = ({handleClose,content,header}) => {
         <div className='w-1/2 bg-white rounded-lg h-fit mt-32 p-5'>
             <div className='flex justify-between '>
                 <div className='text-4xl font-semibold' >{header}</div>
-                <div onClick={handleClose} ><CancelIcon sx={{fontSize:"32px"}} /></div>
+                <div onClick={handleClose} className='cursor-pointer' ><CancelIcon sx={{fontSize:"32px"}} /></div>
             </div>
             <div className='mt-10'>
                 {content}

@@ -12,12 +12,15 @@ import Modal from "../../Components/Modal/modal";
 import AddMemberShip from "../../Components/Addmembership/addMemberShip";
 import AddMember from "../../Components/AddMembers/addMembers";
 import axios from "axios";
+import { ToastContainer,toast } from "react-toastify";
 
 const Member = () => {
   const [addMemberShip, setAddMemberShip] = useState(false);
   const [addMember, setaddMember] = useState(false);
   const [data,setData] = useState([]);
-
+  const [skip,setSkip] = useState(0);
+  const [search,setSearch] = useState("");
+  const [isSearchmodeOn,setIsSearchModeOn] = useState(false);
  
   // state for pagination
   const [currentPage, setcurrentPage] = useState(1);
@@ -32,6 +35,8 @@ const Member = () => {
   useEffect(() => {
     fetchData(0, 9);
   }, []);
+
+
 
   const fetchData = async (skip, limits) => {
     await axios
@@ -56,8 +61,15 @@ const Member = () => {
           setStartfrom(0);
           setEndTo(totalData);
         }
-      });
+      }).catch(err=>{
+        toast.error("Something Technical Issues")
+        console.log(err);
+      })
   };
+
+
+
+
 
   // fn for back button in pagination
   const handleprev = () => {
@@ -69,8 +81,15 @@ const Member = () => {
       var to = currPage * 9;
       setStartfrom(from);
       setEndTo(to);
+     let skipValue = skip-9;
+      setSkip(skipValue);
+      fetchData(skipValue,9);
     }
   };
+
+
+
+
 
   const handlenext = () => {
     if (currentPage !== noOfPage) {
@@ -86,16 +105,43 @@ const Member = () => {
       }
       setStartfrom(from);
       setEndTo(to);
+      let skipValue = skip+9;
+      setSkip(skipValue);
+      fetchData(skipValue,9);
     }
   };
+
+
 
   const handleaddMember = () => {
     setaddMember((prev) => !prev);
   };
 
+
   const handleMemberShip = () => {
     setAddMemberShip((prev) => !prev);
   };
+
+  const handleSearchData = async()=>{
+    if(search!==""){
+            setIsSearchModeOn(true);
+            await axios.get(`http://localhost:4000/members/searched-member?searchTerm=${search}`,{withCredentials:true}).then((response)=>{
+                // console.log(response);
+                setData(response.data.members);
+                setTotalData(response.data.totalMembers)
+            }).catch(err=>{
+                toast.error("Something Technical Issues")
+                console.log(err);
+            })
+    }else{
+        if(isSearchmodeOn){
+
+        }else{
+            toast.error("Please Enter Any Value !!")
+        }
+    }
+  }
+
 
   return (
     <div className="w-3/4 text-black p-5 h-[100vh]">
@@ -129,19 +175,20 @@ const Member = () => {
       {/* Searchbox for members */}
       <div className="w-1/2 mt-5 flex gap-2">
         <input
-          type="text"
+          type="text" value={search} onChange={((e)=>{setSearch(e.target.value)})}
           placeholder="Search By Name & Mobile No"
           className="border-2 w-full p-2 rounded-lg"
         />
-        <div className="bg-slate-900 p-3 border-2 text-white rounded-lg cursor-pointer hover:bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500">
+        <div onClick={()=>handleSearchData()} className="bg-slate-900 p-3 border-2 text-white rounded-lg cursor-pointer hover:bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500">
           <SearchIcon />
         </div>
       </div>
 
       {/* layout for total members & implementd pagination */}
       <div className="mt-5 text-xl flex justify-between text-slate-900 ">
-        <div className="font-mono text-2xl "> Total Members</div>
-        <div className="flex gap-5">
+        <div className="font-mono text-2xl "> Total Members {isSearchmodeOn ? totalData : null}</div>
+        {
+            !isSearchmodeOn ?  <div className="flex gap-5">
           <div className="font-mono text-2xl">
             {startfrom + 1} - {endTo} of {totalData} Members
           </div>
@@ -161,7 +208,8 @@ const Member = () => {
           >
             <ChevronRightIcon />
           </div>
-        </div>
+        </div>:null
+        }
       </div>
 
       {/* List of all 9 Members in one-page */}
@@ -206,7 +254,9 @@ const Member = () => {
           content={<AddMember />}
         />
       )}
+       <ToastContainer/>
     </div>
+   
   );
 };
 
