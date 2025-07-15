@@ -8,6 +8,7 @@ import Member from './Pages/Member/member';
 import Generaluser from './Pages/GeneralUser/generaluser';
 import NotFound from './Pages/NotFound/notFound';
 import MemberDetail from './Pages/MemberDetail/memberDetail';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
 
@@ -16,16 +17,16 @@ function App() {
   
 
   useEffect(() => {
-    let isLogedIn = sessionStorage.getItem("isLogin");
+    let isLogedIn = localStorage.getItem("isLogin");
     if(isLogedIn){
       setIsLogIn(true);
-      // navigate('/dashboard')
+      navigate('/dashboard')
     }else{
       setIsLogIn(false);
       navigate('/')
     }
     
-  },[sessionStorage.getItem("isLogin")])
+  },[localStorage.getItem("isLogin")])
 
   return (
     <div className="flex">
