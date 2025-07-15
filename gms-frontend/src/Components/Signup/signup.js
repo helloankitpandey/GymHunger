@@ -5,6 +5,7 @@ import ForgetPassword from "../ForgetPassword/forgetpassword";
 import axios from 'axios';
 import Stack from '@mui/material/Stack';
 import LinearProgress from '@mui/material/LinearProgress';
+import { ToastContainer, toast } from "react-toastify";
 
 const Signup = () => {
 
@@ -16,17 +17,18 @@ const Signup = () => {
 
     // formhandling of signup form
     const [inputField, setInputField] = useState({
-      gynName: "",
+      gymName: "",
       email: "",
-      username: "",
+      userName: "",
       password: "",
-      profilPic: "https://colorlib.com/wp/wp-content/uploads/sites/2/klipsan-squarespace-gym-website.jpg"
+      profilePic: "https://colorlib.com/wp/wp-content/uploads/sites/2/klipsan-squarespace-gym-website.jpg"
     });
 
     const handleOnChange = (event, name) => {
       setInputField({...inputField, [name]: event.target.value })
     }
-    console.log(inputField);
+
+    // console.log(inputField);
 
     const handleClose = () => {
         setForgetPassword(prev => !prev);
@@ -49,12 +51,24 @@ const Signup = () => {
         const response = await axios.post("https://api.cloudinary.com/v1_1/dw7n1fvp0/image/upload", data);
         console.log(response);
         const imageUrl = response.data.url;
-        setInputField({...inputField, ['profilPic']: imageUrl});
+        setInputField({...inputField, ['profilePic']: imageUrl});
         setLoaderImg(false)
       } catch (error) {
         console.log(error);
         setLoaderImg(false)
       }
+    }
+
+    const handleRegister = async() => {
+      axios.post("http://localhost:4000/auth/register", inputField).then((res) => {
+        console.log(res);
+        const successMsg = res.data.message;
+        toast.success(successMsg)
+      }).catch(err => {
+        const errorMessage = err.response.data.error;
+        console.log(err);
+        toast.error(errorMessage)
+      })
     }
 
 
@@ -71,18 +85,18 @@ const Signup = () => {
         placeholder="Enter Email"
       />
       <input
-        value={inputField.gynName}
-        onChange={(event) => {handleOnChange(event, "gynName" ) }}
+        value={inputField.gymName}
+        onChange={(event) => {handleOnChange(event, "gymName" ) }}
         types="text"
         className="w-full mb-10 p-2 rounded-lg"
         placeholder="Enter Gym Name"
       />
       <input
-        value={inputField.username}
-        onChange={(event) => {handleOnChange(event, "username" ) }}
+        value={inputField.userName}
+        onChange={(event) => {handleOnChange(event, "userName" ) }}
         types="text"
         className="w-full mb-10 p-2 rounded-lg"
-        placeholder="Enter Username"
+        placeholder="Enter UserName"
       />
       <input
         value={inputField.password}
@@ -103,17 +117,20 @@ const Signup = () => {
 
 
       <img
-        src={inputField.profilPic}
+        src={inputField.profilePic}
         className="h-[200px] w-[250px] mb-10 "
       />
 
 
-      <div className="p-2 w-[80%] bg-blue-700  mx-auto rounded-lg text-white text-center text-lg hover:bg-blue-400 hover:text-black font-semibold  cursor-pointer">
+      <div onClick={() => handleRegister()} className="p-2 w-[80%] bg-blue-700  mx-auto rounded-lg text-white text-center text-lg hover:bg-blue-400 hover:text-black font-semibold  cursor-pointer">
         Register
       </div>
       <div onClick={handleClose} className="p-2 w-[80%] mt-5 bg-blue-700  mx-auto rounded-lg text-white text-center text-lg hover:bg-blue-400 hover:text-black font-semibold  cursor-pointer">
         Forget Password
       </div>
+
+      <ToastContainer />
+
       {forgetPassword && <Modal header="Forget Password" handleClose={handleClose} content={<ForgetPassword />}/> }
     </div>
   );
