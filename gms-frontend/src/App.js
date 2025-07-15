@@ -15,12 +15,13 @@ function App() {
   const navigate = useNavigate();
   const [isLogIn, setIsLogIn] = useState(false);
   
+  
 
   useEffect(() => {
     let isLogedIn = localStorage.getItem("isLogin");
     if(isLogedIn){
       setIsLogIn(true);
-      // navigate('/dashboard')
+      navigate('/dashboard')
     }else{
       setIsLogIn(false);
       navigate('/')
