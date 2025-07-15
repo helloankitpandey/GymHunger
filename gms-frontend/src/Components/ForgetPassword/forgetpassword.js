@@ -1,9 +1,14 @@
 import React, { useState } from "react";
+import Loader from "../Loader/loader";
+import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
 
 const ForgetPassword = () => {
   const [emailSubmit, setEmailSubmit] = useState(false);
   const [otpValidate, setOtpValidate] = useState(false);
   const [contentVal, setContentVal] = useState("Submit Your Email-id");
+  // for loading
+  const [loader, setLoader] = useState(false);
 
   const [inputField, setInputField] = useState({
     email: "",
@@ -14,17 +19,69 @@ const ForgetPassword = () => {
   const handleOnChange = (event, name) => {
     setInputField({ ...inputField, [name]: event.target.value });
   };
-  console.log(inputField);
+  // console.log(inputField);
 
-  const handleSubmit = () => {
-    if (!emailSubmit) {
+  const sendOtp = async() => {
+    setLoader(true);
+    await axios.post("http://localhost:4000/auth/reset-password/sendOtp", {email: inputField.email}).then((res) => {
+      // console.log(res);
       setEmailSubmit(true);
       setContentVal("Submit Your OTP");
-    } else if (emailSubmit && !otpValidate) {
+      toast.success(res.data.message);
+      setLoader(false)
+
+    }).catch(err => {
+
+      toast.error("Some Techical Error")
+      console.log(err);
+      setLoader(false)
+    })
+  }
+
+  const verifyOtp = async() => {
+    setLoader(true)
+    await axios.post("http://localhost:4000/auth/reset-password/checkOtp", {email: inputField.email, otp: inputField.otp}).then((res) => {
       setOtpValidate(true);
       setContentVal("Submit New Password");
+      toast.success(res.data.message);
+      setLoader(false);
+    }).catch(err => {
+
+      toast.error("Some Techical Error")
+      console.log(err);
+      setLoader(false)
+    })
+  }
+
+  const changePassword = async() => {
+    setLoader(true)
+    await axios.post("http://localhost:4000/auth/reset-password", {email: inputField.email, newPassword: inputField.newPassword}).then((res) => {
+      console.log(res);
+      
+      toast.success(res.data.message)
+      setLoader(false);
+    }).catch(err => {
+      toast.error("Some Techical Error")
+      console.log(err);
+      setLoader(false)
+    })
+  }
+
+  const handleSubmit = () => {
+
+    if (!emailSubmit) {
+      // setEmailSubmit(true);
+      // setContentVal("Submit Your OTP");
+      sendOtp();
+    }else if(emailSubmit && !otpValidate) {
+      // setOtpValidate(true);
+      // setContentVal("Submit New Password");
+      verifyOtp();
+    }else{
+      
+      changePassword();
     }
-  };
+  }
 
   return (
     <div className="w-full">
@@ -69,6 +126,12 @@ const ForgetPassword = () => {
       >
         {contentVal}
       </div>
+
+      {
+        loader && <Loader />
+      }
+      <ToastContainer />
+
     </div>
   );
 };
