@@ -17,12 +17,22 @@ const MemberDetail = () => {
   const [membership,setMembership] = useState([]);
   const [planMember,setPlanMember] = useState("");
   const hasFetched = useRef(false);
+  const {id} = useParams();
 
 
-  const handleSwitchBtn = () => {
+  const handleSwitchBtn =async () => {
     let statuss = status === "Active" ? "Pending" : "Active";
+    await  axios.post(`http://localhost:4000/members/change-status/${id}`,{status:statuss},{withCredentials:true}).then((response)=>{
+      console.log(response.data)  
+      toast.success("Status Changed");
+    }).catch((err)=>{
+      console.log(err)  ;
+      toast.error("Something Went Wrong");
+    })
     setStatus(statuss);
   };
+
+  
   const isDateInPast =  (inputdate)=>{
     const today = new Date();
     const givenDate = new Date(inputdate);
@@ -30,7 +40,7 @@ const MemberDetail = () => {
   }
 ;
   const navigate = useNavigate();
-  const {id} = useParams();
+
   
 
   useEffect(()=>{
@@ -53,7 +63,7 @@ const MemberDetail = () => {
 
   const fetchData = async()=>{
       await axios.get(`http://localhost:4000/members/get-member/${id}`,{withCredentials:true}).then((response)=>{
-        console.log(response);
+        // console.log(response);
         setData(response.data.member);
         setStatus(response.data.member.status);
         toast.success(response.data.message);
@@ -63,8 +73,19 @@ const MemberDetail = () => {
       })
   }
 
-  const handelOnChangeSelect = async()=>{
-    
+  const handelOnChangeSelect = (event)=>{
+      let value = event.target.value;
+      setPlanMember(value);
+  }
+  // console.log(planMember);
+  const handelRenewSaveBtn = async()=>{
+     await axios.put(`http://localhost:4000/members/update-member-plan/${id}`,{membership:planMember},{withCredentials:true}).then((res)=>{
+          setData(res.data.member);
+          toast.success("Plan updated successfully !!")
+     }).catch((err)=>{
+          console.log(err);
+          toast.error("Failed to update Data");
+      })
   }
 
   return (
@@ -84,7 +105,7 @@ const MemberDetail = () => {
           <div className="w-1/3 mx-auto">
             <img
               className="w-full mx-auto"
-              src="https://cdn.pixabay.com/photo/2016/12/02/08/30/man-1877208_1280.jpg"
+              src={data?.profilePic}
             />
           </div>
 
@@ -137,7 +158,7 @@ const MemberDetail = () => {
                       {
                         membership.map((item,index)=>{
                           return(
-                            <option > {item.months} Months Membership </option>
+                            <option value={item._id} > {item.months} Months Membership </option>
                           )
                         })
                       }
@@ -145,6 +166,7 @@ const MemberDetail = () => {
 
                     <div
                       className={`mt-1 p-3 border-4 border-slate-900 justify-center items-center mx-auto w-1/2 text-center  cursor-pointer  rounded-lg hover:bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:text-white`}
+                      onClick={()=>{handelRenewSaveBtn()}}
                     >
                       Save
                     </div>
