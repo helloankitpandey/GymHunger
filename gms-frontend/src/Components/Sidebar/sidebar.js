@@ -2,75 +2,111 @@ import React, { useEffect, useState } from 'react'
 import HomeIcon from '@mui/icons-material/Home';
 import GroupIcon from '@mui/icons-material/Group';
 import LogoutIcon from '@mui/icons-material/Logout';
+import MenuIcon from '@mui/icons-material/Menu';
+import CloseIcon from '@mui/icons-material/Close';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 const Sidebar = () => {
-
     const navigate = useNavigate();
-
-    // for checking ki - kis url pe hai
-    const location  = useLocation(); // get the current location
-    // for dashboard or member
+    const location = useLocation();
 
     const [greeting, setGreeting] = useState("");
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false); // mobile toggle
 
     const greetingMsg = () => {
         const currentHour = new Date().getHours();
-        if(currentHour < 12){
-            setGreeting("Good Morning 🌞")
-        }else if(currentHour < 18){
+        if (currentHour < 12) {
+            setGreeting("Good Morning 🌞");
+        } else if (currentHour < 18) {
             setGreeting("Good Afternoon ☀️");
-        }else if(currentHour < 21){
+        } else if (currentHour < 21) {
             setGreeting("Good Evening 🌃");
-        }else{
-            setGreeting("Good Night 🌙")
+        } else {
+            setGreeting("Good Night 🌙");
         }
-    }
+    };
 
-    // for once loading
     useEffect(() => {
         greetingMsg();
-    }, [])
+    }, []);
 
-    const handleLogout = () =>{
+    const handleLogout = () => {
         localStorage.clear();
         navigate("/");
-    }
+    };
 
+    const toggleSidebar = () => {
+        setIsSidebarOpen(!isSidebarOpen);
+    };
 
-  return (
-    <div className='w-1/4 h-[100vh] border-2 bg-black text-white p-5 font-extralight'>
-        <div className='text-center text-3xl'>
-            {localStorage.getItem("gymName")}
-        </div>
-        <div className='flex gap-5 my-5'>
-            <div className='w-[100px] h-[100px] rounded-lg'>
-                <img alt='gym pic' className='w-full h-full rounded-full' src={localStorage.getItem("gymPic")} />
+    return (
+        <>
+            {/* Toggle Button for Mobile */}
+            <div className='md:hidden fixed top-4 left-4 z-50 bg-slate-900 text-white p-2 rounded-full shadow-lg'>
+                {isSidebarOpen ? (
+                    <CloseIcon onClick={toggleSidebar} sx={{ fontSize: 30, cursor: "pointer" }} />
+                ) : (
+                    <MenuIcon onClick={toggleSidebar} sx={{ fontSize: 30, cursor: "pointer" }} />
+                )}
             </div>
-            <div>
-                <div className='text-2xl' >{ greeting }</div>
-                <div className='text-xl mt-1 font-semibold' >admin</div>
+
+            {/* Sidebar */}
+            <div
+                className={`fixed z-40 top-0 left-0 h-full md:h-auto w-64 bg-black text-white p-5 font-extralight transform transition-transform duration-300 ease-in-out
+                ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 md:static md:w-1/4`}
+                style={{ minHeight: '100%' }} // ensures sidebar stretches
+            >
+                <div className='text-center text-3xl mb-4'>
+                    {localStorage.getItem("gymName")}
+                </div>
+                <div className='flex gap-5 mb-6'>
+                    <div className='w-[80px] h-[80px] rounded-full overflow-hidden'>
+                        <img
+                            alt='gym pic'
+                            className='w-full h-full object-cover'
+                            src={localStorage.getItem("gymPic")}
+                        />
+                    </div>
+                    <div>
+                        <div className='text-xl'>{greeting}</div>
+                        <div className='text-lg mt-1 font-semibold'>Admin</div>
+                    </div>
+                </div>
+
+                <div className='mt-6 space-y-4'>
+                    <Link
+                        to='/dashboard'
+                        onClick={() => setIsSidebarOpen(false)}
+                        className={` ${location.pathname === "/dashboard"
+                            ? 'border-2 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500'
+                            : ''} flex gap-4 font-semibold text-lg bg-slate-800 p-3 rounded-xl cursor-pointer hover:bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:text-black`}
+                    >
+                        <HomeIcon />
+                        <span>Dashboard</span>
+                    </Link>
+
+                    <Link
+                        to='/member'
+                        onClick={() => setIsSidebarOpen(false)}
+                        className={` ${location.pathname === "/member"
+                            ? 'border-2 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500'
+                            : ''} flex gap-4 font-semibold text-lg bg-slate-800 p-3 rounded-xl cursor-pointer hover:bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:text-black`}
+                    >
+                        <GroupIcon />
+                        <span>Members</span>
+                    </Link>
+
+                    <div
+                        onClick={handleLogout}
+                        className='flex gap-4 font-semibold text-lg bg-slate-800 p-3 rounded-xl cursor-pointer hover:bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:text-black'
+                    >
+                        <LogoutIcon />
+                        <span>Logout</span>
+                    </div>
+                </div>
             </div>
-        </div>
+        </>
+    );
+};
 
-        <div className='mt-10 py-10 border-t-2 border-gray-700'>
-            <Link to='/dashboard' className={` ${location.pathname === "/dashboard" ? 'border-2 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500' : null}  flex gap-4 font-semibold text-xl bg-slate-800 p-3 rounded-xl cursor-pointer hover:bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:text-black`}>
-                <div><HomeIcon /></div>
-                <div>Dashboard</div>
-            </Link>
-
-            <Link to='/member' className={`  ${location.pathname === "/member" ? 'border-2 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500' : null}   flex gap-4 mt-6 font-semibold text-xl bg-slate-800 p-3 rounded-xl cursor-pointer hover:bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:text-black`}>
-                <div><GroupIcon /></div>
-                <div>Members</div>
-            </Link>
-
-            <div  onClick={handleLogout} className='flex gap-4 mt-6 font-semibold text-xl bg-slate-800 p-3 rounded-xl cursor-pointer hover:bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:text-black'>
-                <div><LogoutIcon /></div>
-                <div>Logout</div>
-            </div>
-        </div>
-    </div>
-  )
-}
-
-export default Sidebar
+export default Sidebar;
