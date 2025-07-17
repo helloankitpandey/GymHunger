@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-mongoose.connect('mongodb://localhost:27017/gynHunger')
+mongoose.connect(process.env.MONGO_DB)
 .then(() => console.log('DB connection successful!')).catch(err=>{
   console.log(err)
 });
