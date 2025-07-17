@@ -10,7 +10,7 @@ const app = express();
 
 // resolving cors error
 app.use(cors({
-    origin: 'http://localhost:3000',
+    origin: process.env.CLIENT_URL || 'http://localhost:3000',
     credentials: true
 }))
 
@@ -18,7 +18,7 @@ app.use(cors({
 require('./DBConn/conn');
 
 // Define the port where the server will run
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 4000 ;
 app.use(cookieparser());
 app.use(express.json());
 
