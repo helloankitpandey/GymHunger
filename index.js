@@ -18,7 +18,7 @@ app.use(cors({
 require('./DBConn/conn');
 
 // Define the port where the server will run
-const PORT = 4000;
+const PORT = process.env.PORT;
 app.use(cookieparser());
 app.use(express.json());
 

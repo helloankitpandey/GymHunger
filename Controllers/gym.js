@@ -37,7 +37,7 @@ exports.register = async(req,res)=>{
 
 const cookieOptions = {
     httpOnly : true,
-    secure : false,// set to true during production
+    secure : true,// set to true during production
     sameSite:'Lax'
 };
 
