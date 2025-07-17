@@ -35,17 +35,18 @@ function App() {
       {
         isLogIn && <Sidebar />
       }
-      <Routes>
+      <div className={`flex-grow ${isLogIn ? 'md:ml-64' : ''}`}>
+        <Routes>
 
-        <Route path="/" element={<Home />}  />
-        <Route path='/dashboard' element={<Dashboard />} />
-        <Route path='/member' element={<Member />} />
-        <Route path='/specific/:page' element={<Generaluser />} />
-        <Route path='/member/:id' element={<MemberDetail />} />
-        <Route path='*' element={<NotFound />} />
+          <Route path="/" element={<Home />}  />
+          <Route path='/dashboard' element={<Dashboard />} />
+          <Route path='/member' element={<Member />} />
+          <Route path='/specific/:page' element={<Generaluser />} />
+          <Route path='/member/:id' element={<MemberDetail />} />
+          <Route path='*' element={<NotFound />} />
 
-      </Routes>
-
+        </Routes>
+      </div>
     </div>
   );
 }
