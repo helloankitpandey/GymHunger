@@ -6,15 +6,11 @@ import Stack from '@mui/material/Stack';
 import LinearProgress from '@mui/material/LinearProgress';
 import { ToastContainer, toast } from "react-toastify";
 
+// backend url
+const backendURL = process.env.REACT_APP_BACKEND_API;
+
 const Signup = () => {
-
-<<<<<<< HEAD
-=======
-  // backend url
-  const backendURL = process.env.REACT_APP_BACKEND_API;
-
   const [forgetPassword, setForgetPassword] = useState(false);
->>>>>>> 6dc12115cf91760f82d919916dd85b571b05705f
   const [loaderImg, setLoaderImg] = useState(false);
 
   const [inputField, setInputField] = useState({
