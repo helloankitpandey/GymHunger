@@ -9,10 +9,28 @@ const cors = require('cors');
 const app = express();
 
 // resolving cors error
+// app.use(cors({
+//     origin: process.env.CLIENT_URL || 'http://localhost:3000',
+//     credentials: true
+// }))
+
+const allowedOrigins = [
+  'http://localhost:3000',
+  process.env.CLIENT_URL
+];
+
 app.use(cors({
-    origin: process.env.CLIENT_URL || 'http://localhost:3000',
-    credentials: true
-}))
+  origin: function (origin, callback) {
+    // allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    } else {
+      return callback(new Error('CORS not allowed for this origin: ' + origin), false);
+    }
+  },
+  credentials: true
+}));
 
 // Import database connection (MongoDB connection using Mongoose)
 require('./DBConn/conn');
