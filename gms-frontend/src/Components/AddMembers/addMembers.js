@@ -24,6 +24,8 @@ const AddMember = () => {
   // for getting selected's option value
   const [selectedOption, setSelectedOption] = useState("");
 
+  // backend url
+  const backendURL = process.env.REACT_APP_BACKEND_API;
 
   const handleOnChange = (event, name) => {
     setInputField({ ...inputField, [name]: event.target.value });
@@ -59,23 +61,58 @@ const AddMember = () => {
     }
   };
 
-  const fetchMembership = async() => {
-    await axios.get("http://localhost:4000/plans/get-membership", {withCredentials: true}).then((res) => {
-      setMembershipList(res.data.membership);
-      if(res.data.membership.length === 0){
-        return toast.error("No any MemberShip Added yet",{
-          className: "text-lg"
-        })
-      }else{
-        let a = res.data.membership[0]._id;
-        setSelectedOption(a);
-        setInputField({...inputField, membership: a});
-      }
+  // const fetchMembership = async() => {
+  //   await axios.get(`${backendURL}/plans/get-membership`, {withCredentials: true}).then((res) => {
+  //     setMembershipList(res.data.membership);
+  //     if(res.data.membership.length === 0){
+  //       return toast.error("No any MemberShip Added yet",{
+  //         className: "text-lg"
+  //       })
+  //     }else{
+  //       let a = res.data.membership[0]._id;
+  //       setSelectedOption(a);
+  //       setInputField({...inputField, membership: a});
+  //     }
 
-    }).catch(err => {
-      console.log(err);
-    })
+  //   }).catch(err => {
+  //     console.log(err);
+  //   })
+  // }
+
+  const fetchMembership = async () => {
+  try {
+    const token = localStorage.getItem("token");
+
+    const res = await axios.get(
+      `${backendURL}/plans/get-membership`,
+      {
+        withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    setMembershipList(res.data.membership);
+
+    if (res.data.membership.length === 0) {
+      return toast.error("No any MemberShip Added yet", {
+        className: "text-lg",
+      });
+    } else {
+      let a = res.data.membership[0]._id;
+      setSelectedOption(a);
+      setInputField({ ...inputField, membership: a });
+    }
+
+  } catch (err) {
+    console.log(err);
+    toast.error("Something went wrong", {
+      className: "text-lg",
+    });
   }
+};
+
 
 
   useEffect(() => {
@@ -92,17 +129,45 @@ const AddMember = () => {
   }
 
   // for registration of new member
-  const handleRegisterButton = async() => {
-    await axios.post("http://localhost:4000/members/register-member", inputField, {withCredentials: true}).then((res) => {
-      toast.success("Member Added Successfully");
-      setTimeout(() => {
-        window.location.reload();
-      }, 2000);
-    }).catch(err => {
-      console.log(err);
-      toast.error("Something Wrong Happened")
-    })
+  // const handleRegisterButton = async() => {
+  //   await axios.post(`${backendURL}/members/register-member`, inputField, {withCredentials: true}).then((res) => {
+  //     toast.success("Member Added Successfully");
+  //     setTimeout(() => {
+  //       window.location.reload();
+  //     }, 2000);
+  //   }).catch(err => {
+  //     console.log(err);
+  //     toast.error("Something Wrong Happened")
+  //   })
+  // }
+
+  const handleRegisterButton = async () => {
+  try {
+    const token = localStorage.getItem("token");
+
+    const res = await axios.post(
+      `${backendURL}/members/register-member`,
+      inputField,
+      {
+        withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    toast.success("Member Added Successfully");
+
+    setTimeout(() => {
+      window.location.reload();
+    }, 2000);
+
+  } catch (err) {
+    console.log(err);
+    toast.error("Something Wrong Happened");
   }
+};
+
 
 
   return (

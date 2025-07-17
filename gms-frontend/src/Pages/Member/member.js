@@ -15,6 +15,11 @@ import axios from "axios";
 import { ToastContainer,toast } from "react-toastify";
 
 const Member = () => {
+
+  // backend url
+  const backendURL = process.env.REACT_APP_BACKEND_API;
+
+  
   const [addMemberShip, setAddMemberShip] = useState(false);
   const [addMember, setaddMember] = useState(false);
   const [data,setData] = useState([]);
@@ -36,33 +41,72 @@ const Member = () => {
     fetchData(0, 9);
   }, []);
 
+  // const fetchData = async (skip, limits) => {
+  //   await axios
+  //     .get(
+  //       `${backendURL}/members/all-member?skip=${skip}&limit=${limits}`,
+  //       { withCredentials: true }
+  //     )
+  //     .then((response) => {
+  //       let totalData = response.data.totalMembers;
+  //       setTotalData(totalData);
+  //       setData(response.data.members);
+
+  //       let extraPage = totalData % limit === 0 ? 0 : 1;
+  //       let totalPage = parseInt(totalData / limit) + extraPage;
+  //       setNoOfPage(totalPage);
+
+  //       if (totalData === 0) {
+  //         setStartfrom(-1);
+  //         setEndTo(0);
+  //       } else if (totalData < 9) {
+  //         setStartfrom(0);
+  //         setEndTo(totalData);
+  //       }
+  //     }).catch(err=>{
+  //       toast.error("Something Technical Issues")
+  //       console.log(err);
+  //     })
+  // };
+
   const fetchData = async (skip, limits) => {
-    await axios
-      .get(
-        `http://localhost:4000/members/all-member?skip=${skip}&limit=${limits}`,
-        { withCredentials: true }
-      )
-      .then((response) => {
-        let totalData = response.data.totalMembers;
-        setTotalData(totalData);
-        setData(response.data.members);
+  try {
+    const token = localStorage.getItem("token"); // or wherever you store the JWT token
 
-        let extraPage = totalData % limit === 0 ? 0 : 1;
-        let totalPage = parseInt(totalData / limit) + extraPage;
-        setNoOfPage(totalPage);
+    const response = await axios.get(
+      `${backendURL}/members/all-member?skip=${skip}&limit=${limits}`,
+      {
+        withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
 
-        if (totalData === 0) {
-          setStartfrom(-1);
-          setEndTo(0);
-        } else if (totalData < 9) {
-          setStartfrom(0);
-          setEndTo(totalData);
-        }
-      }).catch(err=>{
-        toast.error("Something Technical Issues")
-        console.log(err);
-      })
-  };
+    let totalData = response.data.totalMembers;
+    setTotalData(totalData);
+    setData(response.data.members);
+
+    let extraPage = totalData % limit === 0 ? 0 : 1;
+    let totalPage = parseInt(totalData / limit) + extraPage;
+    setNoOfPage(totalPage);
+
+    if (totalData === 0) {
+      setStartfrom(-1);
+      setEndTo(0);
+    } else if (totalData < 9) {
+      setStartfrom(0);
+      setEndTo(totalData);
+    }
+
+  } catch (err) {
+    toast.error("Something Technical Issue");
+    console.log(err);
+  }
+};
+
+
+
 
   // fn for back button in pagination
   const handleprev = () => {
@@ -109,7 +153,7 @@ const Member = () => {
   const handleSearchData = async()=>{
     if(search!==""){
       setIsSearchModeOn(true);
-      await axios.get(`http://localhost:4000/members/searched-member?searchTerm=${search}`,{withCredentials:true}).then((response)=>{
+      await axios.get(`${backendURL}/members/searched-member?searchTerm=${search}`,{withCredentials:true}).then((response)=>{
         setData(response.data.members);
         setTotalData(response.data.totalMembers)
       }).catch(err=>{

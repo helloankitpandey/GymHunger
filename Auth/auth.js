@@ -2,7 +2,7 @@ const Gym = require('../Modals/gym');
 const jwt = require('jsonwebtoken');
 
 
-const auth = async (req,res,next) =>{
+const auth = async (req,res,next) =>{ 
     try{
 
         const token = req.cookies['cookie-token'] || req.headers.authorization?.split(" ")[1];

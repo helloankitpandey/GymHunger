@@ -7,6 +7,10 @@ import {ToastContainer,toast} from 'react-toastify'
 
 const MemberDetail = () => {
 
+  // backend url
+  const backendURL = process.env.REACT_APP_BACKEND_API;
+
+
   
   const [inputField, setInputField] = useState();
 
@@ -22,7 +26,7 @@ const MemberDetail = () => {
 
   const handleSwitchBtn =async () => {
     let statuss = status === "Active" ? "Pending" : "Active";
-    await  axios.post(`http://localhost:4000/members/change-status/${id}`,{status:statuss},{withCredentials:true}).then((response)=>{
+    await  axios.post(`${backendURL}/members/change-status/${id}`,{status:statuss},{withCredentials:true}).then((response)=>{
       console.log(response.data)  
       toast.success("Status Changed");
     }).catch((err)=>{
@@ -52,7 +56,7 @@ const MemberDetail = () => {
   },[])
 
    const fetchMembership = async()=>{
-      axios.get('http://localhost:4000/plans/get-membership',{withCredentials:true}).then((response)=>{
+      axios.get(`${backendURL}/plans/get-membership`,{withCredentials:true}).then((response)=>{
           setMembership(response.data.membership);
           setPlanMember(response.data.membership[0]._id);
       }).catch((err)=>{
@@ -62,7 +66,7 @@ const MemberDetail = () => {
    }
 
   const fetchData = async()=>{
-      await axios.get(`http://localhost:4000/members/get-member/${id}`,{withCredentials:true}).then((response)=>{
+      await axios.get(`${backendURL}/members/get-member/${id}`,{withCredentials:true}).then((response)=>{
         // console.log(response);
         setData(response.data.member);
         setStatus(response.data.member.status);
@@ -79,7 +83,7 @@ const MemberDetail = () => {
   }
   // console.log(planMember);
   const handelRenewSaveBtn = async()=>{
-     await axios.put(`http://localhost:4000/members/update-member-plan/${id}`,{membership:planMember},{withCredentials:true}).then((res)=>{
+     await axios.put(`${backendURL}/members/update-member-plan/${id}`,{membership:planMember},{withCredentials:true}).then((res)=>{
           setData(res.data.member);
           toast.success("Plan updated successfully !!")
      }).catch((err)=>{

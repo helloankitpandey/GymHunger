@@ -13,7 +13,10 @@ const app = express();
 //     origin: process.env.CLIENT_URL || 'http://localhost:3000',
 //     credentials: true
 // }))
+<<<<<<< HEAD
 
+=======
+>>>>>>> 6dc12115cf91760f82d919916dd85b571b05705f
 const allowedOrigins = [
   'http://localhost:3000',
   process.env.CLIENT_URL
@@ -31,6 +34,10 @@ app.use(cors({
   },
   credentials: true
 }));
+<<<<<<< HEAD
+=======
+
+>>>>>>> 6dc12115cf91760f82d919916dd85b571b05705f
 
 // Import database connection (MongoDB connection using Mongoose)
 require('./DBConn/conn');

@@ -8,6 +8,13 @@ import { ToastContainer, toast } from "react-toastify";
 
 const Signup = () => {
 
+<<<<<<< HEAD
+=======
+  // backend url
+  const backendURL = process.env.REACT_APP_BACKEND_API;
+
+  const [forgetPassword, setForgetPassword] = useState(false);
+>>>>>>> 6dc12115cf91760f82d919916dd85b571b05705f
   const [loaderImg, setLoaderImg] = useState(false);
 
   const [inputField, setInputField] = useState({
@@ -40,7 +47,7 @@ const Signup = () => {
   }
 
   const handleRegister = async () => {
-    axios.post("http://localhost:4000/auth/register", inputField).then((res) => {
+    axios.post(`${backendURL}/auth/register`, inputField).then((res) => {
       const successMsg = res.data.message;
       toast.success(successMsg);
     }).catch(err => {

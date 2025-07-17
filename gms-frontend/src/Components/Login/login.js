@@ -10,9 +10,16 @@ const Login = () => {
   const [loginField, setLoginField] = useState({ "userName": "", "password": "" });
   const [forgetPassword, setForgetPassword] = useState(false);
   const navigate = useNavigate();
+  // backend url
+  const backendURL = process.env.REACT_APP_BACKEND_API;
+
 
   const handleLogin = async () => {
+<<<<<<< HEAD
     await axios.post("http://localhost:4000/auth/login", loginField, { withCredentials: true }).then((res) => {
+=======
+    await axios.post(`${backendURL}/auth/login`, loginField, { withCredentials: true }).then((res) => {
+>>>>>>> 6dc12115cf91760f82d919916dd85b571b05705f
       localStorage.setItem('gymName', res.data.gym.gymName);
       localStorage.setItem('gymPic', res.data.gym.profilePic);
       localStorage.setItem('isLogin', true);
