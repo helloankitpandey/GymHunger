@@ -9,7 +9,7 @@ const Login = () => {
   const navigate = useNavigate();
 
   const handleLogin = async () => {
-    await axios.post("https://gymhunger.onrender.com/auth/login", loginField, { withCredentials: true }).then((res) => {
+    await axios.post("http://localhost:4000/auth/login", loginField, { withCredentials: true }).then((res) => {
       localStorage.setItem('gymName', res.data.gym.gymName);
       localStorage.setItem('gymPic', res.data.gym.profilePic);
       localStorage.setItem('isLogin', true);
