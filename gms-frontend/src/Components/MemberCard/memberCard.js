@@ -4,8 +4,8 @@ import { Link } from "react-router-dom";
 
 const MemberCard = ({item}) => {
   return (
-    <Link to={`/member/${item?._id}`} className="bg-white rounded-lg p-3 hover:bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:text-white">
-      <div className="w-28 h-28 flex justify-center relative items-center border-2 p-1 mx-auto rouded-full ">
+    <Link to={`/member/${item?._id}`} className="bg-white rounded-lg p-3 hover:bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:text-white cursor-pointer transform transition-transform duration-300 ease-in-out hover:scale-105 hover:shadow-lg active:scale-105 active:shadow-lg cursor-pointer">
+      <div className="w-28 h-28 flex justify-center relative items-center border-2 p-1 mx-auto rouded-full sm:shadow-none shadow-lg rounded-full">
         <img
           className="w-full h-full rounded-full"
           alt="Profil pic"

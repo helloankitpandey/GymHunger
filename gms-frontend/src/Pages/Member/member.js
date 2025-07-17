@@ -36,8 +36,6 @@ const Member = () => {
     fetchData(0, 9);
   }, []);
 
-
-
   const fetchData = async (skip, limits) => {
     await axios
       .get(
@@ -45,7 +43,6 @@ const Member = () => {
         { withCredentials: true }
       )
       .then((response) => {
-        // console.log(response);
         let totalData = response.data.totalMembers;
         setTotalData(totalData);
         setData(response.data.members);
@@ -67,10 +64,6 @@ const Member = () => {
       })
   };
 
-
-
-
-
   // fn for back button in pagination
   const handleprev = () => {
     if (currentPage !== 1) {
@@ -81,23 +74,17 @@ const Member = () => {
       var to = currPage * 9;
       setStartfrom(from);
       setEndTo(to);
-     let skipValue = skip-9;
+      let skipValue = skip-9;
       setSkip(skipValue);
       fetchData(skipValue,9);
     }
   };
-
-
-
-
 
   const handlenext = () => {
     if (currentPage !== noOfPage) {
       let currPage = currentPage + 1;
       setcurrentPage(currPage);
 
-      // var from = (currPage*9) - 9;
-      // var to = (currPage*9);
       var from = (currPage - 1) * 9;
       var to = currPage * 9;
       if (to > totalData) {
@@ -111,12 +98,9 @@ const Member = () => {
     }
   };
 
-
-
   const handleaddMember = () => {
     setaddMember((prev) => !prev);
   };
-
 
   const handleMemberShip = () => {
     setAddMemberShip((prev) => !prev);
@@ -124,41 +108,38 @@ const Member = () => {
 
   const handleSearchData = async()=>{
     if(search!==""){
-            setIsSearchModeOn(true);
-            await axios.get(`http://localhost:4000/members/searched-member?searchTerm=${search}`,{withCredentials:true}).then((response)=>{
-                // console.log(response);
-                setData(response.data.members);
-                setTotalData(response.data.totalMembers)
-            }).catch(err=>{
-                toast.error("Something Technical Issues")
-                console.log(err);
-            })
+      setIsSearchModeOn(true);
+      await axios.get(`http://localhost:4000/members/searched-member?searchTerm=${search}`,{withCredentials:true}).then((response)=>{
+        setData(response.data.members);
+        setTotalData(response.data.totalMembers)
+      }).catch(err=>{
+        toast.error("Something Technical Issues")
+        console.log(err);
+      })
     }else{
-        if(isSearchmodeOn){
-
-        }else{
-            toast.error("Please Enter Any Value !!")
-        }
+      if(isSearchmodeOn){
+      }else{
+        toast.error("Please Enter Any Value !!")
+      }
     }
   }
 
-
   return (
-    <div className="w-3/4 text-black p-5 h-[100vh]">
+    <div className="w-full max-w-full overflow-x-hidden box-border text-black p-5">
       {/* block for banner */}
       <div className="border-2 bg-slate-900 flex justify-between w-full text-white rounded-lg p-3 ">
         <div
           onClick={handleaddMember}
-          className="border-2  pl-3 pr-3 pt-1 pb-1 rounded-2xl cursor-pointer hover:bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:text-black font-medium"
+          className="border-2 pl-3 pr-3 pt-1 pb-1 rounded-2xl cursor-pointer hover:bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:text-black font-medium flex items-center justify-center gap-1"
         >
-          Add Member
+          <span className="hidden sm:inline">Add Member</span>
           <PersonAddIcon className="ml-1 font-medium mb-1" />
         </div>
         <div
           onClick={handleMemberShip}
-          className="border-2  pl-3 pr-3 pt-1 pb-1 rounded-2xl cursor-pointer hover:bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:text-black font-medium"
+          className="border-2 pl-3 pr-3 pt-1 pb-1 rounded-2xl cursor-pointer hover:bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:text-black font-medium flex items-center justify-center gap-1"
         >
-          Membership
+          <span className="hidden sm:inline">Membership</span>
           <AddIcon className="ml-1 font-medium mb-1" />
         </div>
       </div>
@@ -173,7 +154,7 @@ const Member = () => {
       </Link>
 
       {/* Searchbox for members */}
-      <div className="w-1/2 mt-5 flex gap-2">
+      <div className="w-full sm:w-1/2 mt-5 flex gap-2">
         <input
           type="text" value={search} onChange={((e)=>{setSearch(e.target.value)})}
           placeholder="Search By Name & Mobile No"
@@ -188,55 +169,47 @@ const Member = () => {
       <div className="mt-5 text-xl flex justify-between text-slate-900 ">
         <div className="font-mono text-2xl "> Total Members {isSearchmodeOn ? totalData : null}</div>
         {
-            !isSearchmodeOn ?  <div className="flex gap-5">
-          <div className="font-mono text-2xl">
-            {startfrom + 1} - {endTo} of {totalData} Members
-          </div>
-          <div
-            onClick={handleprev}
-            className={` ${
-              currentPage === 1 ? "bg-gray-200 text-gray-300" : null
-            }  w-8 h-8 cursor-pointer border-2 flex items-center justify-center hover:text-white hover:bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 `}
-          >
-            <ChevronLeftIcon />
-          </div>
-          <div
-            onClick={handlenext}
-            className={` ${
-              currentPage === noOfPage ? "bg-gray-200 text-gray-300" : null
-            }   w-8 h-8 cursor-pointer border-2 flex items-center justify-center hover:text-white hover:bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 `}
-          >
-            <ChevronRightIcon />
-          </div>
-        </div>:null
+          !isSearchmodeOn ?  <div className="flex gap-5">
+            <div className="hidden sm:block font-mono text-2xl">
+              {startfrom + 1} - {endTo} of {totalData} Members
+            </div>
+            <div
+              onClick={handleprev}
+              className={` ${
+                currentPage === 1 ? "bg-gray-200 text-gray-300" : null
+              }  w-8 h-8 cursor-pointer border-2 flex items-center justify-center hover:text-white hover:bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 `}
+            >
+              <ChevronLeftIcon />
+            </div>
+            <div
+              onClick={handlenext}
+              className={` ${
+                currentPage === noOfPage ? "bg-gray-200 text-gray-300" : null
+              }   w-8 h-8 cursor-pointer border-2 flex items-center justify-center hover:text-white hover:bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 `}
+            >
+              <ChevronRightIcon />
+            </div>
+          </div>:null
         }
       </div>
 
       {/* List of all 9 Members in one-page */}
-      <div className="bg-slate-100 p-5 mt-5 rounded-lg grid grid-cols-3 overflow-x-auto h-[65%]">
-        {/* div for Member card */}
-        {/* <div className='bg-white rounded-lg p-3 hover:bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:text-white'>
-                <div className='w-28 h-28 flex justify-center relative items-center border-2 p-1 mx-auto rouded-full '>
-                    <img className='w-full h-full rounded-full' alt='Profil pic' src='data:image/jpeg;base64,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' />
-                    <CircleIcon className='absolute top-0 left-0' sx={{color:"greenyellow"}} />
-                </div>
-
-                <div className='mx-auto mt-5 text-center text-xl font-mono'>
-                    {"Ankit Pandey"}
-                </div>
-                <div className='mx-auto mt-2 text-center text-xl font-mono'>
-                    {"+91 "+"5874215469"}
-                </div>
-                <div className='mx-auto mt-2 text-center text-xl font-mono'>
-                    Next Bill Date : {"11-07-2025"}
-                </div>
-
-            </div> */}
-            {
+      <div className="bg-slate-100 p-5 mt-5 rounded-lg w-full max-w-full">
+        {
+          data.length === 0 ? (
+            <div className="text-center text-xl font-semibold text-gray-500 py-20">
+              No members found
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-full">
+              {
                 data.map((item, index) => (
-                    <MemberCard key={index} item={item}  />
+                  <MemberCard key={index} item={item}  />
                 ))
-            }
+              }
+            </div>
+          )
+        }
       </div>
 
       {addMemberShip && (
@@ -254,9 +227,8 @@ const Member = () => {
           content={<AddMember />}
         />
       )}
-       <ToastContainer/>
+      <ToastContainer/>
     </div>
-   
   );
 };
 

@@ -42,7 +42,7 @@ const Sidebar = () => {
     return (
         <>
             {/* Toggle Button for Mobile */}
-            <div className='md:hidden fixed top-4 left-4 z-50 bg-slate-900 text-white p-2 rounded-full shadow-lg'>
+            <div className='md:hidden fixed bottom-4 left-4 z-50 bg-slate-900 text-white p-2 rounded-full shadow-lg'>
                 {isSidebarOpen ? (
                     <CloseIcon onClick={toggleSidebar} sx={{ fontSize: 30, cursor: "pointer" }} />
                 ) : (
@@ -52,8 +52,8 @@ const Sidebar = () => {
 
             {/* Sidebar */}
             <div
-                className={`fixed z-40 top-0 left-0 h-full md:h-auto w-64 bg-black text-white p-5 font-extralight transform transition-transform duration-300 ease-in-out
-                ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 md:static md:w-1/4`}
+                className={`fixed z-40 top-0 left-0 h-full w-64 bg-black text-white p-5 font-extralight transform transition-transform duration-300 ease-in-out
+                ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}
                 style={{ minHeight: '100%' }} // ensures sidebar stretches
             >
                 <div className='text-center text-3xl mb-4'>

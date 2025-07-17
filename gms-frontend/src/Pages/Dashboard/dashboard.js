@@ -12,7 +12,7 @@ const Dashboard = () => {
     };
 
     return (
-        <div className='w-full md:w-3/4 flex flex-col min-h-screen'>
+        <div className='w-full flex flex-col min-h-screen'>
             {/* Topbar */}
             <div className='p-4 md:p-6'>
                 <div className='w-full bg-slate-900 text-white rounded-lg flex p-3 justify-between items-center shadow-md'>
@@ -26,9 +26,9 @@ const Dashboard = () => {
             </div>
 
             {/* Content */}
-            <div className='flex-1 mt-2 px-6 pb-8 bg-slate-100 bg-opacity-60 rounded-lg grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'>
+            <div className='flex-1 mt-2 px-4 pb-8 bg-slate-100 bg-opacity-60 rounded-lg grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 w-full box-border'>
                 {/* Dashboard Cards */}
-                <Link to={"/member"} className='border bg-white rounded-2xl cursor-pointer shadow-lg hover:shadow-2xl hover:scale-105 transition-transform duration-300 hover:bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 hover:text-white'>
+                <Link to={"/member"} className='border bg-white rounded-2xl cursor-pointer shadow-lg hover:shadow-2xl hover:scale-105 active:scale-105 active:shadow-lg transition-transform duration-300 hover:bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 hover:text-white'>
                     <div className='h-2 rounded-t-2xl bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500'></div>
                     <div className='py-10 px-6 flex flex-col items-center'>
                         <PeopleAltIcon sx={{ color: "green", fontSize: "60px" }} />
@@ -36,7 +36,7 @@ const Dashboard = () => {
                     </div>
                 </Link>
 
-                <Link onClick={() => handleOnClickMenu("monthlyJoined")} to={'/specific/monthly'} className='border bg-white rounded-2xl cursor-pointer shadow-lg hover:shadow-2xl hover:scale-105 transition-transform duration-300 hover:bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 hover:text-white'>
+                <Link onClick={() => handleOnClickMenu("monthlyJoined")} to={'/specific/monthly'} className='border bg-white rounded-2xl cursor-pointer shadow-lg hover:shadow-2xl hover:scale-105 active:scale-105 active:shadow-lg transition-transform duration-300 hover:bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 hover:text-white'>
                     <div className='h-2 rounded-t-2xl bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500'></div>
                     <div className='py-10 px-6 flex flex-col items-center'>
                         <SignalCellularAltIcon sx={{ color: "purple", fontSize: "60px" }} />
@@ -44,7 +44,7 @@ const Dashboard = () => {
                     </div>
                 </Link>
 
-                <Link onClick={() => handleOnClickMenu("threeDaysExpired")} to={'/specific/expire-with-in-3-days'} className='border bg-white rounded-2xl cursor-pointer shadow-lg hover:shadow-2xl hover:scale-105 transition-transform duration-300 hover:bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 hover:text-white'>
+                <Link onClick={() => handleOnClickMenu("threeDaysExpired")} to={'/specific/expire-with-in-3-days'} className='border bg-white rounded-2xl cursor-pointer shadow-lg hover:shadow-2xl hover:scale-105 active:scale-105 active:shadow-lg transition-transform duration-300 hover:bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 hover:text-white'>
                     <div className='h-2 rounded-t-2xl bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500'></div>
                     <div className='py-10 px-6 flex flex-col items-center'>
                         <AccessAlarmIcon sx={{ color: "red", fontSize: "60px" }} />
@@ -52,7 +52,7 @@ const Dashboard = () => {
                     </div>
                 </Link>
 
-                <Link onClick={() => handleOnClickMenu("fourTOSevenDaysExpired")} to={'/specific/expire-with-in-4-7-days'} className='border bg-white rounded-2xl cursor-pointer shadow-lg hover:shadow-2xl hover:scale-105 transition-transform duration-300 hover:bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 hover:text-white'>
+                <Link onClick={() => handleOnClickMenu("fourTOSevenDaysExpired")} to={'/specific/expire-with-in-4-7-days'} className='border bg-white rounded-2xl cursor-pointer shadow-lg hover:shadow-2xl hover:scale-105 active:scale-105 active:shadow-lg transition-transform duration-300 hover:bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 hover:text-white'>
                     <div className='h-2 rounded-t-2xl bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500'></div>
                     <div className='py-10 px-6 flex flex-col items-center'>
                         <AccessAlarmIcon sx={{ color: "red", fontSize: "60px" }} />
@@ -60,7 +60,7 @@ const Dashboard = () => {
                     </div>
                 </Link>
 
-                <Link onClick={() => handleOnClickMenu("expired")} to={'/specific/expired'} className='border bg-white rounded-2xl cursor-pointer shadow-lg hover:shadow-2xl hover:scale-105 transition-transform duration-300 hover:bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 hover:text-white'>
+                <Link onClick={() => handleOnClickMenu("expired")} to={'/specific/expired'} className='border bg-white rounded-2xl cursor-pointer shadow-lg hover:shadow-2xl hover:scale-105 active:scale-105 active:shadow-lg transition-transform duration-300 hover:bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 hover:text-white'>
                     <div className='h-2 rounded-t-2xl bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500'></div>
                     <div className='py-10 px-6 flex flex-col items-center'>
                         <ErrorIcon sx={{ color: "red", fontSize: "60px" }} />
@@ -68,7 +68,7 @@ const Dashboard = () => {
                     </div>
                 </Link>
 
-                <Link onClick={() => handleOnClickMenu("inActiveMembers")} to={'/specific/inactive-member'} className='border bg-white rounded-2xl cursor-pointer shadow-lg hover:shadow-2xl hover:scale-105 transition-transform duration-300 hover:bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 hover:text-white'>
+                <Link onClick={() => handleOnClickMenu("inActiveMembers")} to={'/specific/inactive-member'} className='border bg-white rounded-2xl cursor-pointer shadow-lg hover:shadow-2xl hover:scale-105 active:scale-105 active:shadow-lg transition-transform duration-300 hover:bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 hover:text-white'>
                     <div className='h-2 rounded-t-2xl bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500'></div>
                     <div className='py-10 px-6 flex flex-col items-center'>
                         <ReportIcon sx={{ color: "brown", fontSize: "60px" }} />
