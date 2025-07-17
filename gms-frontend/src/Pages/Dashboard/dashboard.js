@@ -78,8 +78,8 @@ const Dashboard = () => {
             </div>
 
             {/* Footer */}
-            <footer className='p-4 md:p-6 bg-black text-white text-center rounded-t-xl text-lg mt-auto'>
-                Contact Developer: +91868461###
+            <footer className='p-4 md:p-6 bg-black text-white text-center rounded-t-xl text-2xl font-bold mt-auto'>
+                Contact Team GymHunger..
             </footer>
         </div>
     )
