@@ -4,6 +4,10 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 
 const ForgetPassword = ({handleClose}) => {
+
+  // backend url
+  const backendURL = process.env.REACT_APP_BACKEND_API;
+
   const [emailSubmit, setEmailSubmit] = useState(false);
   const [otpValidate, setOtpValidate] = useState(false);
   const [contentVal, setContentVal] = useState("Submit Your Email-id");
@@ -23,7 +27,7 @@ const ForgetPassword = ({handleClose}) => {
 
   const sendOtp = async() => {
     setLoader(true);
-    await axios.post("http://localhost:4000/auth/reset-password/sendOtp", {email: inputField.email}).then((res) => {
+    await axios.post(`${backendURL}/auth/reset-password/sendOtp`, {email: inputField.email}).then((res) => {
       // console.log(res);
       setEmailSubmit(true);
       setContentVal("Submit Your OTP");
@@ -40,7 +44,7 @@ const ForgetPassword = ({handleClose}) => {
 
   const verifyOtp = async() => {
     setLoader(true)
-    await axios.post("http://localhost:4000/auth/reset-password/checkOtp", {email: inputField.email, otp: inputField.otp}).then((res) => {
+    await axios.post(`${backendURL}/auth/reset-password/checkOtp`, {email: inputField.email, otp: inputField.otp}).then((res) => {
       setOtpValidate(true);
       setContentVal("Submit New Password");
       toast.success(res.data.message);
@@ -55,7 +59,7 @@ const ForgetPassword = ({handleClose}) => {
 
   const changePassword = async() => {
     setLoader(true)
-    await axios.post("http://localhost:4000/auth/reset-password", {email: inputField.email, newPassword: inputField.newPassword}).then((res) => {
+    await axios.post(`${backendURL}/auth/reset-password`, {email: inputField.email, newPassword: inputField.newPassword}).then((res) => {
       console.log(res);
       
       toast.success(res.data.message)

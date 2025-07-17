@@ -7,6 +7,9 @@ const AddMemberShip = ({handleClose}) => {
     months: "",
     price: "",
   });
+  
+  // backend url
+  const backendURL = process.env.REACT_APP_BACKEND_API;
 
   // for handling membership
   const [membership, setMembership] = useState([]);
@@ -16,42 +19,88 @@ const AddMemberShip = ({handleClose}) => {
   };
   // console.log(inputField);
 
+  // const fetchMembership = async () => {
+  //   await axios
+  //     .get(`${backendURL}/plans/get-membership`, {
+  //       withCredentials: true,
+  //     })
+  //     .then((res) => {
+  //       // console.log(res);
+  //       setMembership(res.data.membership);
+  //       toast.success(res.data.membership.length+" Membership Fetched");
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //       toast.error("Something Wrong Happened");
+  //     });
+  // };
+
   const fetchMembership = async () => {
-    await axios
-      .get("http://localhost:4000/plans/get-membership", {
-        withCredentials: true,
-      })
-      .then((res) => {
-        // console.log(res);
-        setMembership(res.data.membership);
-        toast.success(res.data.membership.length+" Membership Fetched");
-      })
-      .catch((err) => {
-        console.log(err);
-        toast.error("Something Wrong Happened");
-      });
-  };
+  try {
+    const token = localStorage.getItem("token"); // Make sure this key matches where you stored it
+
+    const res = await axios.get(`${backendURL}/plans/get-membership`, {
+      withCredentials: true,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    setMembership(res.data.membership);
+    toast.success(res.data.membership.length + " Membership Fetched");
+
+  } catch (err) {
+    console.log(err);
+    toast.error("Something Went Wrong");
+  }
+};
+
 
   // fetching all membership with page loading using useeffect
   useEffect(() => {
     fetchMembership();
   }, []);
 
+  // const handleAddmembership = async () => {
+  //   await axios
+  //     .post(`${backendURL}/plans/add-membership`, inputField, {
+  //       withCredentials: true,
+  //     })
+  //     .then((res) => {
+  //       // console.log(res);
+  //       toast.success(res.data.message);
+  //       handleClose();
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //       toast.error("Something Wrong Happened");
+  //     });
+  // };
+
   const handleAddmembership = async () => {
-    await axios
-      .post("http://localhost:4000/plans/add-membership", inputField, {
+  try {
+    const token = localStorage.getItem("token"); // Make sure it's stored in localStorage after login
+
+    const res = await axios.post(
+      `${backendURL}/plans/add-membership`,
+      inputField,
+      {
         withCredentials: true,
-      })
-      .then((res) => {
-        // console.log(res);
-        toast.success(res.data.message);
-        handleClose();
-      })
-      .catch((err) => {
-        console.log(err);
-        toast.error("Something Wrong Happened");
-      });
-  };
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    toast.success(res.data.message);
+    handleClose();
+
+  } catch (err) {
+    console.log(err);
+    toast.error("Something Wrong Happened");
+  }
+};
+
 
   return (
     <div>

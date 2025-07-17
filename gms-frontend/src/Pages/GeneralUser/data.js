@@ -1,61 +1,61 @@
+// src/api/memberAPI.js
 import axios from "axios";
 
+// Backend URL from environment variable
+const backendURL = process.env.REACT_APP_BACKEND_API;
 
-const getMonthlyJoined = async ()=>{
-    try {
-        const response = await axios.get('http://localhost:4000/members/monthly-member',{withCredentials:true});
-        return response.data;
-    } catch (error) {
-        console.log(error);
-        throw error;
+// Create a custom axios instance
+const axiosInstance = axios.create({
+  baseURL: backendURL,
+  withCredentials: true,
+});
+
+// Attach token in headers before every request
+axiosInstance.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
     }
-}
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
 
-const threeDayExpire = async ()=>{
-    try {
-        const response = await axios.get('http://localhost:4000/members/within-3-days-expiring',{withCredentials:true});
-        return response.data;
-    } catch (error) {
-        console.log(error);
-        throw error;
-    }
-}
+// API: Get members who joined this month
+const getMonthlyJoined = async () => {
+  const response = await axiosInstance.get("/members/monthly-member");
+  return response.data;
+};
 
+// API: Get members expiring in 3 days
+const threeDayExpire = async () => {
+  const response = await axiosInstance.get("/members/within-3-days-expiring");
+  return response.data;
+};
 
-const fourSevenDaysexpire = async ()=>{
-    try {
-        const response = await axios.get('http://localhost:4000/members/within-4-7-days-expiring',{withCredentials:true});
-        return response.data;
-    } catch (error) {
-        console.log(error);
-        throw error;
-    }
-}
+// API: Get members expiring in 4-7 days
+const fourSevenDaysexpire = async () => {
+  const response = await axiosInstance.get("/members/within-4-7-days-expiring");
+  return response.data;
+};
 
+// API: Get expired members
+const expired = async () => {
+  const response = await axiosInstance.get("/members/expired-member");
+  return response.data;
+};
 
+// API: Get inactive members
+const inActive = async () => {
+  const response = await axiosInstance.get("/members/inactive-member");
+  return response.data;
+};
 
-const expired = async ()=>{
-    try {
-        const response = await axios.get('http://localhost:4000/members/expired-member',{withCredentials:true});
-        return response.data;
-    } catch (error) {
-        console.log(error);
-        throw error;
-    }
-}
-
-
-
-const inActive = async ()=>{
-    try {
-        const response = await axios.get('http://localhost:4000/members/inactive-member',{withCredentials:true});
-        return response.data;
-    } catch (error) {
-        console.log(error);
-        throw error;
-    }
-}
-
-
-
-export {getMonthlyJoined,threeDayExpire,fourSevenDaysexpire,expired,inActive}
+export {
+  getMonthlyJoined,
+  threeDayExpire,
+  fourSevenDaysexpire,
+  expired,
+  inActive
+};
