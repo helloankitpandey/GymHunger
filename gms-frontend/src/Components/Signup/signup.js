@@ -1,15 +1,17 @@
 import React, { useState } from "react";
 import './signup.css';
 import Modal from "../Modal/modal";
+import ForgetPassword from "../ForgetPassword/forgetpassword";
 import axios from 'axios';
 import Stack from '@mui/material/Stack';
 import LinearProgress from '@mui/material/LinearProgress';
 import { ToastContainer, toast } from "react-toastify";
 
-// backend url
-const backendURL = process.env.REACT_APP_BACKEND_API;
-
 const Signup = () => {
+
+  // backend url
+  const backendURL = process.env.REACT_APP_BACKEND_API;
+
   const [forgetPassword, setForgetPassword] = useState(false);
   const [loaderImg, setLoaderImg] = useState(false);
 
@@ -23,6 +25,10 @@ const Signup = () => {
 
   const handleOnChange = (event, name) => {
     setInputField({ ...inputField, [name]: event.target.value });
+  }
+
+  const handleClose = () => {
+    setForgetPassword(prev => !prev);
   }
 
   const uploadImage = async (event) => {
@@ -54,7 +60,7 @@ const Signup = () => {
   }
 
   return (
-    <div className="signup-container w-[90%] sm:w-[70%] md:w-[60%] lg:w-1/3 h-auto lg:h-[500px] p-6 mt-10 bg-gradient-to-br from-gray-900 to-gray-800 rounded-xl shadow-xl overflow-y-auto max-h-[90vh]">
+    <div className="signup-container w-[80%] sm:w-[70%] md:w-[60%] lg:w-1/3 h-auto lg:h-[500px] p-6 mt-10 bg-gradient-to-br from-gray-900 to-gray-800 rounded-xl shadow-xl overflow-y-auto max-h-[90vh]">
       <div className="font-sans text-white text-center text-4xl font-bold mb-8 border-b border-gray-600 pb-4">
         Register Your Gym
       </div>
@@ -118,7 +124,22 @@ const Signup = () => {
         Register
       </div>
 
+      <div
+        onClick={handleClose}
+        className="p-3 w-full bg-blue-600 rounded-lg text-white text-center text-lg hover:bg-blue-500 font-semibold transition-colors duration-200 cursor-pointer"
+      >
+        Forget Password
+      </div>
+
       <ToastContainer />
+
+      {forgetPassword && (
+        <Modal
+          header="Forget Password"
+          handleClose={handleClose}
+          content={<ForgetPassword handleClose={handleClose} />}
+        />
+      )}
     </div>
   );
 };
