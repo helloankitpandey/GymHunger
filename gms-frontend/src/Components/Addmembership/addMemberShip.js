@@ -56,13 +56,13 @@ const AddMemberShip = ({handleClose}) => {
   return (
     <div>
       {/* for upper part */}
-      <div className="flex flex-wrap gap-5 items-center justify-center">
+      <div className="flex flex-wrap gap-5 items-start justify-start overflow-y-auto max-h-[300px] scrollbar-hide">
         {/* block for membership details */}
         {membership.map((item, index) => {
           return (
-            <div className="text-lg bg-slate-900 text-white border-2 pl-2 pr-2 pt-1 pb-1 rounded-xl font-semibold flex-col gap-3 justify-center hover:bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 ">
+            <div className="text-lg bg-slate-900 text-white border-2 rounded-xl font-semibold flex flex-col items-center justify-center gap-3 hover:bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 w-full">
               <div> {item.months} Months Membership </div>
-              <div className="items-center justify-center pl-14">
+              <div>
                 Rs {item.price}
               </div>
             </div>
@@ -72,13 +72,13 @@ const AddMemberShip = ({handleClose}) => {
 
       <hr className="mt-10 mb-10" />
       {/* for lower part */}
-      <div className="flex gap-10 mb-8">
+      <div className="flex flex-col gap-5 mb-8">
         <input
           value={inputField.months}
           onChange={(event) => {
             handleOnChange(event, "months");
           }}
-          className="border-2 rounded-lg text-lg w-1/3 h-1/2 p-2"
+          className="border-2 rounded-lg text-lg w-full h-12 p-2"
           type="number"
           placeholder="Add No. of Months"
         />
@@ -87,7 +87,7 @@ const AddMemberShip = ({handleClose}) => {
           onChange={(event) => {
             handleOnChange(event, "price");
           }}
-          className="border-2 rounded-lg text-lg w-1/3 h-1/2 p-2"
+          className="border-2 rounded-lg text-lg w-full h-12 p-2"
           type="number"
           placeholder="Add Price"
         />
@@ -95,7 +95,7 @@ const AddMemberShip = ({handleClose}) => {
           onClick={() => {
             handleAddmembership();
           }}
-          className="text-lg border-2 p-1 w-auto mt-0 rounded-xl cursor-pointer hover:bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 "
+          className="text-lg border-2 p-3 w-full rounded-xl cursor-pointer hover:bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-center"
         >
           Add+
         </div>

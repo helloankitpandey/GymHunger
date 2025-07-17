@@ -2,14 +2,17 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
+import Modal from "../Modal/modal";
+import ForgetPassword from "../ForgetPassword/forgetpassword";
 
 const Login = () => {
 
   const [loginField, setLoginField] = useState({ "userName": "", "password": "" });
+  const [forgetPassword, setForgetPassword] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = async () => {
-    await axios.post("https://gymhunger.onrender.com/auth/login", loginField, { withCredentials: true }).then((res) => {
+    await axios.post("http://localhost:4000/auth/login", loginField, { withCredentials: true }).then((res) => {
       localStorage.setItem('gymName', res.data.gym.gymName);
       localStorage.setItem('gymPic', res.data.gym.profilePic);
       localStorage.setItem('isLogin', true);
@@ -25,8 +28,12 @@ const Login = () => {
     setLoginField({ ...loginField, [name]: event.target.value });
   }
 
+  const handleClose = () => {
+    setForgetPassword(prev => !prev);
+  }
+
   return (
-    <div className="w-[80%] sm:w-[70%] md:w-[60%] lg:w-1/3 h-auto lg:h-[500px] p-6 mt-10 bg-gradient-to-br from-gray-900 to-gray-800 rounded-xl shadow-xl">
+    <div className="w-[90%] sm:w-[70%] md:w-[60%] lg:w-1/3 h-auto lg:h-[500px] p-6 mt-10 bg-gradient-to-br from-gray-900 to-gray-800 rounded-xl shadow-xl">
       <div className="font-sans text-white text-center text-4xl font-bold mb-8 border-b border-gray-600 pb-4">
         Login
       </div>
@@ -54,7 +61,22 @@ const Login = () => {
         Login
       </div>
 
+      <div
+        onClick={handleClose}
+        className="p-3 mt-8 w-full bg-blue-600 rounded-lg text-white text-center text-lg hover:bg-blue-500 font-semibold transition-colors duration-200 cursor-pointer"
+      >
+        Forget Password
+      </div>
+
       <ToastContainer />
+
+      {forgetPassword && (
+        <Modal
+          header="Forgot Password"
+          handleClose={handleClose}
+          content={<ForgetPassword handleClose={handleClose} />}
+        />
+      )}
     </div>
   );
 };

@@ -12,7 +12,7 @@ const Dashboard = () => {
     };
 
     return (
-        <div className='w-full flex flex-col min-h-screen'>
+        <div className='flex flex-col min-h-screen'>
             {/* Topbar */}
             <div className='p-4 md:p-6'>
                 <div className='w-full bg-slate-900 text-white rounded-lg flex p-3 justify-between items-center shadow-md'>

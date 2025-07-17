@@ -89,7 +89,7 @@ const MemberDetail = () => {
   }
 
   return (
-    <div className="w-3/4 text-black p-2">
+    <div className="w-3/4 sm:w-[70%] md:w-3/5 md:h-1/2 text-black p-2 mx-auto">
       <div
         onClick={() => {
           navigate(-1);
@@ -100,9 +100,9 @@ const MemberDetail = () => {
       </div>
 
       <div className="mt-10 p-2">
-        <div className="w-[100%] h-fit flex">
+        <div className="w-[100%] h-fit flex flex-col sm:flex-row">
           {/* image wala block */}
-          <div className="w-1/3 mx-auto">
+          <div className="w-full sm:w-1/3 mx-auto mb-5 sm:mb-0">
             <img
               className="w-full mx-auto"
               src={data?.profilePic}
@@ -110,24 +110,24 @@ const MemberDetail = () => {
           </div>
 
           {/* block for details */}
-          <div className="w-2/3 mt-5 p-5 text-xl">
-            <div className="mt-1 mb-2 text-2xl font-semibold">Name: {data?.name}</div>
-            <div className="mt-1 mb-2 text-2xl font-semibold">
+          <div className="w-full sm:w-2/3 mt-5 sm:mt-0 p-5 text-xl space-y-4">
+            <div className="text-2xl font-semibold">Name: {data?.name}</div>
+            <div className="text-2xl font-semibold">
               Mobile : {data?.mobileNo}
             </div>
-            <div className="mt-1 mb-2 text-2xl font-semibold">
+            <div className="text-2xl font-semibold">
               Address : {data?.address}
             </div>
-            <div className="mt-1 mb-2 text-2xl font-semibold">
+            <div className="text-2xl font-semibold">
               Joined Date : {data?.createdAt.slice(0,10).split('-').reverse().join('-')}
             </div>
-            <div className="mt-1 mb-2 text-2xl font-semibold">
+            <div className="text-2xl font-semibold">
               Next Bill Date : {data?.nextBillDate.slice(0,10).split('-').reverse().join('-')}
             </div>
-            <div className="mt-1 mb-2 flex gap-4 text-2xl font-semibold">
+            <div className="flex gap-4 text-2xl font-semibold items-center">
               Status :
               <Switch
-                className="mt-1  "
+                className="mt-1"
                 onColor="#6366F1"
                 checked={status === "Active"}
                 onChange={() => handleSwitchBtn()}
