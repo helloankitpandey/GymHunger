@@ -35,7 +35,7 @@ function App() {
       {
         isLogIn && <Sidebar />
       }
-      <div className={`flex-grow ${isLogIn ? 'md:ml-64' : ''}`}>
+      <div className={`flex-grow ${isLogIn ? 'md:ml-80' : ''}`}>
         <Routes>
 
           <Route path="/" element={<Home />}  />

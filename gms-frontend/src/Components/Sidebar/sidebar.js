@@ -52,28 +52,26 @@ const Sidebar = () => {
 
             {/* Sidebar */}
             <div
-                className={`fixed z-40 top-0 left-0 h-full w-64 bg-black text-white p-5 font-extralight transform transition-transform duration-300 ease-in-out
+                className={`fixed z-40 top-0 left-0 h-full w-80 bg-black text-white p-5 font-extralight transform transition-transform duration-300 ease-in-out
                 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}
                 style={{ minHeight: '100%' }} // ensures sidebar stretches
             >
-                <div className='text-center text-3xl mb-4'>
+                <div className='text-center text-3xl mb-6 font-bold uppercase'>
                     {localStorage.getItem("gymName")}
                 </div>
-                <div className='flex gap-5 mb-6'>
-                    <div className='w-[80px] h-[80px] rounded-full overflow-hidden'>
+                <div className='flex flex-col items-center mb-8 mt-4'>
+                    <div className='w-[100px] h-[100px] rounded-full overflow-hidden mb-4 border-4 border-white'>
                         <img
                             alt='gym pic'
-                            className='w-full h-full object-cover'
+                            className='w-full h-full object-contain object-center'
                             src={localStorage.getItem("gymPic")}
                         />
                     </div>
-                    <div>
-                        <div className='text-xl'>{greeting}</div>
-                        <div className='text-lg mt-1 font-semibold'>Admin</div>
-                    </div>
+                    <div className='text-xl mb-2'>{greeting}</div>
+                    <div className='text-lg font-semibold'>Admin</div>
                 </div>
 
-                <div className='mt-6 space-y-4'>
+                <div className='mt-6 space-y-6'>
                     <Link
                         to='/dashboard'
                         onClick={() => setIsSidebarOpen(false)}
