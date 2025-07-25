@@ -29,7 +29,7 @@ const Login = () => {
   }
 
   return (
-    <div className="w-[80%] sm:w-[70%] md:w-[60%] lg:w-1/3 h-auto lg:h-[500px] p-6 mt-10 bg-gradient-to-br from-gray-900 to-gray-800 rounded-xl shadow-xl">
+    <div className="w-[80%] sm:w-[90%] md:w-[90%] lg:w-1/3 h-auto lg:h-[500px] p-6 mt-10 bg-gradient-to-br from-gray-900 to-gray-800 rounded-xl shadow-xl">
       <div className="font-sans text-white text-center text-4xl font-bold mb-8 border-b border-gray-600 pb-4">
         Login
       </div>
