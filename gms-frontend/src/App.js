@@ -8,6 +8,8 @@ import Member from './Pages/Member/member';
 import Generaluser from './Pages/GeneralUser/generaluser';
 import NotFound from './Pages/NotFound/notFound';
 import MemberDetail from './Pages/MemberDetail/memberDetail';
+import Trainer from './Pages/Trainer/trainer';
+import TrainerDetail from './Pages/TrainerDetail/trainerDetail';
 import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
@@ -41,6 +43,8 @@ function App() {
           <Route path="/" element={<Home />}  />
           <Route path='/dashboard' element={<Dashboard />} />
           <Route path='/member' element={<Member />} />
+          <Route path='/trainer' element={<Trainer />} />
+          <Route path='/trainer/:id' element={<TrainerDetail />} />
           <Route path='/specific/:page' element={<Generaluser />} />
           <Route path='/member/:id' element={<MemberDetail />} />
           <Route path='*' element={<NotFound />} />

@@ -196,6 +196,32 @@ exports.resetPassword = async (req,res)=>{
     }
 }
 
+
+exports.updateGymProfilePic = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { profilePic } = req.body; // Expecting profilePic as a URL or base64 string
+
+        if (!profilePic) {
+            return res.status(400).json({ error: "Profile picture is required" });
+        }
+
+        const gym = await Gym.findById(id);
+        if (!gym) {
+            return res.status(404).json({ error: "Gym not found" });
+        }
+
+        gym.profilePic = profilePic;
+        await gym.save();
+
+        res.status(200).json({ message: "Profile picture updated successfully", profilePic: gym.profilePic });
+        
+    } catch (error) {
+        console.error("Error updating gym profile picture:", error);
+        res.status(500).json({ error: "Server Error" });
+    }
+};
+
 exports.logout = async()=>{
     res.clearCoockie('cookie-token',cookieOptions).json({
         message:'Logged out successfully !!'

@@ -15,6 +15,7 @@ const Login = () => {
     await axios.post(`${backendURL}/auth/login`, loginField, { withCredentials: true }).then((res) => {
       localStorage.setItem('gymName', res.data.gym.gymName);
       localStorage.setItem('gymPic', res.data.gym.profilePic);
+      localStorage.setItem('gymId', res.data.gym._id);
       localStorage.setItem('isLogin', true);
       localStorage.setItem('token', res.data.token);
       navigate("/dashboard");

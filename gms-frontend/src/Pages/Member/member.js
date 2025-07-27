@@ -146,6 +146,25 @@ const Member = () => {
     setaddMember((prev) => !prev);
   };
 
+  const deleteMember = async (id) => {
+    try {
+      const token = localStorage.getItem("token");
+      await axios.delete(`${backendURL}/members/delete-member/${id}`, {
+        withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      toast.success("Member deleted successfully");
+      // Update the data state to remove the deleted member without refreshing the page
+      setData((prevData) => prevData.filter((member) => member._id !== id));
+      setTotalData((prevTotal) => prevTotal - 1);
+    } catch (error) {
+      toast.error("Failed to delete member");
+      console.error(error);
+    }
+  };
+
   const handleMemberShip = () => {
     setAddMemberShip((prev) => !prev);
   };
@@ -153,7 +172,13 @@ const Member = () => {
   const handleSearchData = async()=>{
     if(search!==""){
       setIsSearchModeOn(true);
-      await axios.get(`${backendURL}/members/searched-member?searchTerm=${search}`,{withCredentials:true}).then((response)=>{
+      const token = localStorage.getItem("token");
+      await axios.get(`${backendURL}/members/searched-member?searchTerm=${search}`,{
+        withCredentials:true,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }).then((response)=>{
         setData(response.data.members);
         setTotalData(response.data.totalMembers)
       }).catch(err=>{

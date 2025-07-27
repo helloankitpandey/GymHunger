@@ -59,33 +59,41 @@ function addMonthsToDate(months,joiningDate){
      return futureDate;
 }
 
-exports.registerMember= async(req,res)=>{
-    try {
-        const {name,mobileNo,address, membership,profilePic,joiningDate}=req.body;
-        const member = await Member.findOne({gym:req.gym._id,mobileNo:mobileNo});
-         if(member){
-            return res.status(409).json({message:"Member Already Registered With this MobileNO"});
-         }
-         const memberShip = await Membership.findOne({gym:req.gym._id,_id:membership});
-         const membershipMonth = memberShip.months;
-         if(memberShip){
-            let jngDate = new Date(joiningDate);
-            const nextBillDate = addMonthsToDate(membershipMonth,jngDate);
-            let newmember = new Member({name,mobileNo,address,membership,gym:req.gym._id,profilePic,nextBillDate});
-            await newmember.save();
-            return res.status(200).json({message:"Member Successfully Registered With this MobileNO",newmember});
-         }else{
-            return res.status(409).json({
-                error:"No such Membership are there!"
-            })
-         }
-    } catch (error) {
-        // for debugging
-        // console.log(error);
-        
-        res.status(500).json({
-            error: "Server Error"
-        });
+const mongoose = require('mongoose');
+
+exports.registerMember= async(req,res)=>{  
+    try {  
+        const {name,mobileNo,address, membership,profilePic,joiningDate, trainer} = req.body;  
+
+        // Validate membership ObjectId
+        if(!mongoose.Types.ObjectId.isValid(membership)){
+            return res.status(400).json({error: "Invalid membership id"});
+        }
+
+        const member = await Member.findOne({gym:req.gym._id,mobileNo:mobileNo});  
+         if(member){  
+            return res.status(409).json({message:"Member Already Registered With this MobileNO"});  
+         }  
+         const memberShip = await Membership.findOne({gym:req.gym._id,_id:membership});  
+         if(!memberShip){  
+            return res.status(409).json({  
+                error:"No such Membership are there!"  
+            })  
+         }  
+         const membershipMonth = memberShip.months;  
+         let jngDate = new Date(joiningDate);  
+         const nextBillDate = addMonthsToDate(membershipMonth,jngDate);  
+         let newmember = new Member({name,mobileNo,address,membership,gym:req.gym._id,profilePic,nextBillDate});  
+         if(trainer){  
+             newmember.trainer = trainer;  
+         }  
+         await newmember.save();  
+         res.status(201).json({message: "Member registered successfully", member: newmember});
+    } catch (error) {  
+        console.error(error);  
+        res.status(500).json({  
+            error: "Server Error"  
+        });  
     }
 }
 
@@ -238,14 +246,14 @@ exports.inActiveMember = async(req,res)=>{
             error: "Server Error"
         }); 
     }
-}
+};
 
 
 
 exports.getMemberDetails = async(req,res)=>{
     try {
         const {id}= req.params;
-        const member = await Member.findById({_id:id,gym:req.gym._id});
+const member = await Member.findOne({_id:id,gym:req.gym._id}).populate('trainer').populate('membership');
         if(!member){
             return res.status(400).json({
                 error:"No Such Member "
@@ -261,6 +269,22 @@ exports.getMemberDetails = async(req,res)=>{
         });  
     }
 }
+
+exports.updateMemberTrainer = async (req, res) => {
+    try {
+        const { trainer } = req.body;
+        const { id } = req.params;
+        const member = await Member.findOne({ _id: id, gym: req.gym._id });
+        if (!member) {
+            return res.status(404).json({ error: "Member not found" });
+        }
+        member.trainer = trainer;
+        await member.save();
+        res.status(200).json({ message: "Trainer assigned successfully", member });
+    } catch (error) {
+        res.status(500).json({ error: "Server Error" });
+    }
+};
 
 
 
@@ -317,3 +341,16 @@ exports.updateMemberPlan = async(req,res)=>{
         }); 
     }
 }
+
+exports.deleteMember = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const member = await Member.findOneAndDelete({ _id: id, gym: req.gym._id });
+        if (!member) {
+            return res.status(404).json({ error: "Member not found" });
+        }
+        res.status(200).json({ message: "Member deleted successfully" });
+    } catch (error) {
+        res.status(500).json({ error: "Server Error" });
+    }
+};

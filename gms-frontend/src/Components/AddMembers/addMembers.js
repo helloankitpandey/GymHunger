@@ -4,25 +4,29 @@ import Stack from '@mui/material/Stack';
 import LinearProgress from '@mui/material/LinearProgress';
 import { toast, ToastContainer } from "react-toastify";
 
-
 const AddMember = () => {
   const [inputField, setInputField] = useState({
     name: "",
     mobileNo: "",
     address: "",
     joiningDate: "",
-    memberShip: "",
+    membership: "",
     profilePic: "https://colorlib.com/wp/wp-content/uploads/sites/2/klipsan-squarespace-gym-website.jpg",
+    trainer: "", // added trainer field
   });
 
   // for loading img
   const [loaderImg, setLoaderImg] = useState(false);
 
-  // for hadling membership state
+  // for handling membership state
   const [membershipList, setMembershipList] = useState([]);
 
-  // for getting selected's option value
-  const [selectedOption, setSelectedOption] = useState("");
+  // for handling trainer state
+  const [trainerList, setTrainerList] = useState([]);
+
+  // for getting selected's option value for membership and trainer
+  const [selectedMembership, setSelectedMembership] = useState("");
+  const [selectedTrainer, setSelectedTrainer] = useState("");
 
   // backend url
   const backendURL = process.env.REACT_APP_BACKEND_API;
@@ -30,12 +34,10 @@ const AddMember = () => {
   const handleOnChange = (event, name) => {
     setInputField({ ...inputField, [name]: event.target.value });
   };
-  console.log(inputField);
 
-  // for uploading img on cloundnary
+  // for uploading img on cloudinary
   const uploadImage = async (event) => {
-
-    setLoaderImg(true)
+    setLoaderImg(true);
 
     const files = event.target.files;
     const data = new FormData();
@@ -49,126 +51,128 @@ const AddMember = () => {
         "https://api.cloudinary.com/v1_1/dw7n1fvp0/image/upload",
         data
       );
-      console.log(response);
       const imageUrl = response.data.url;
       setInputField({ ...inputField, ["profilePic"]: imageUrl });
 
-      setLoaderImg(false)
-
+      setLoaderImg(false);
     } catch (error) {
       console.log(error);
-      setLoaderImg(false)
+      setLoaderImg(false);
     }
   };
 
-  // const fetchMembership = async() => {
-  //   await axios.get(`${backendURL}/plans/get-membership`, {withCredentials: true}).then((res) => {
-  //     setMembershipList(res.data.membership);
-  //     if(res.data.membership.length === 0){
-  //       return toast.error("No any MemberShip Added yet",{
-  //         className: "text-lg"
-  //       })
-  //     }else{
-  //       let a = res.data.membership[0]._id;
-  //       setSelectedOption(a);
-  //       setInputField({...inputField, membership: a});
-  //     }
-
-  //   }).catch(err => {
-  //     console.log(err);
-  //   })
-  // }
-
   const fetchMembership = async () => {
-  try {
-    const token = localStorage.getItem("token");
-
-    const res = await axios.get(
-      `${backendURL}/plans/get-membership`,
-      {
-        withCredentials: true,
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        toast.error("Authentication token missing. Please login again.");
+        return;
       }
-    );
+      const res = await axios.get(
+        `${backendURL}/plans/get-membership`,
+        {
+          withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
-    setMembershipList(res.data.membership);
+      setMembershipList(res.data.membership);
 
-    if (res.data.membership.length === 0) {
-      return toast.error("No any MemberShip Added yet", {
+      if (res.data.membership.length === 0) {
+        return toast.error("No any MemberShip Added yet", {
+          className: "text-lg",
+        });
+      } else {
+        // Remove default selection of first membership
+        // let a = res.data.membership[0]._id;
+        // setSelectedMembership(a);
+        // setInputField({ ...inputField, membership: a });
+      }
+    } catch (err) {
+      console.log(err);
+      toast.error("Something went wrong", {
         className: "text-lg",
       });
-    } else {
-      let a = res.data.membership[0]._id;
-      setSelectedOption(a);
-      setInputField({ ...inputField, membership: a });
     }
+  };
 
-  } catch (err) {
-    console.log(err);
-    toast.error("Something went wrong", {
-      className: "text-lg",
-    });
-  }
-};
+  const fetchTrainers = async () => {
+    try {
+      const token = localStorage.getItem("token");
 
+      const res = await axios.get(
+        `${backendURL}/trainers/all-trainer?skip=0&limit=1000`,
+        {
+          withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
+      setTrainerList(res.data.trainers);
+
+      if (res.data.trainers.length > 0) {
+        // Remove default selection of first trainer
+        // let firstTrainerId = res.data.trainers[0]._id;
+        // setSelectedTrainer(firstTrainerId);
+        // setInputField({ ...inputField, trainer: firstTrainerId });
+      }
+    } catch (err) {
+      console.log(err);
+      toast.error("Failed to fetch trainers", {
+        className: "text-lg",
+      });
+    }
+  };
 
   useEffect(() => {
-    console.log(inputField);
-    
     fetchMembership();
-  },[])
+    fetchTrainers();
+  }, []);
 
-  // for option selection and storing in memship of inputfield
-  const handleOnChangeSelect = (event) => {
+  // for option selection and storing in membership of inputField
+  const handleMembershipChange = (event) => {
     let value = event.target.value;
-    setSelectedOption(value);
-    setInputField({...inputField, membership: value})
-  }
+    setSelectedMembership(value);
+    setInputField({ ...inputField, membership: value });
+  };
+
+  // for option selection and storing in trainer of inputField
+  const handleTrainerChange = (event) => {
+    let value = event.target.value;
+    setSelectedTrainer(value);
+    setInputField({ ...inputField, trainer: value });
+  };
 
   // for registration of new member
-  // const handleRegisterButton = async() => {
-  //   await axios.post(`${backendURL}/members/register-member`, inputField, {withCredentials: true}).then((res) => {
-  //     toast.success("Member Added Successfully");
-  //     setTimeout(() => {
-  //       window.location.reload();
-  //     }, 2000);
-  //   }).catch(err => {
-  //     console.log(err);
-  //     toast.error("Something Wrong Happened")
-  //   })
-  // }
-
   const handleRegisterButton = async () => {
-  try {
-    const token = localStorage.getItem("token");
+    try {
+      const token = localStorage.getItem("token");
 
-    const res = await axios.post(
-      `${backendURL}/members/register-member`,
-      inputField,
-      {
-        withCredentials: true,
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+      const res = await axios.post(
+        `${backendURL}/members/register-member`,
+        inputField,
+        {
+          withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
-    toast.success("Member Added Successfully");
+      toast.success("Member Added Successfully");
 
-    setTimeout(() => {
-      window.location.reload();
-    }, 2000);
-
-  } catch (err) {
-    console.log(err);
-    toast.error("Something Wrong Happened");
-  }
-};
-
-
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
+    } catch (err) {
+      console.log(err);
+      toast.error("Something Wrong Happened");
+    }
+  };
 
   return (
     <div className="text-black">
@@ -211,10 +215,11 @@ const AddMember = () => {
         />
 
         <select
-          value={selectedOption}
-          onChange={handleOnChangeSelect}
+          value={selectedMembership}
+          onChange={handleMembershipChange}
           className="border-2 w-[90%] h-12 pt-2 pb-2 border-slate-400 rounded-md placeholder:text-gray"
         >
+          <option value="" disabled>Select Membership</option>
           {
             membershipList.map((item, index) => {
               return(
@@ -224,9 +229,20 @@ const AddMember = () => {
           }
         </select>
 
-        <input onChange={(e) => {uploadImage(e)}} type="file" />
+        <select
+          value={selectedTrainer}
+          onChange={handleTrainerChange}
+          className="border-2 w-[90%] h-12 pt-2 pb-2 border-slate-400 rounded-md placeholder:text-gray"
+        >
+          <option value="" disabled>Select Trainer (Optional)</option>
+          {
+            trainerList.map((trainer, index) => (
+              <option key={index} value={trainer._id}>{trainer.name}</option>
+            ))
+          }
+        </select>
 
-        
+        <input onChange={(e) => {uploadImage(e)}} type="file" />
 
         <div className="w-1/4">
           <img
@@ -246,7 +262,6 @@ const AddMember = () => {
       </div>
 
       <ToastContainer />
-
     </div>
   );
 };

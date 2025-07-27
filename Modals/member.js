@@ -58,6 +58,13 @@ const memberSchema = mongoose.Schema(
         nextBillDate: {
             type: Date,
             required: true,
+        },
+
+        // Reference to assigned trainer (optional)
+        trainer: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Trainer',
+            required: false,
         }
     },
     {

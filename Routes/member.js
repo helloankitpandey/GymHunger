@@ -13,10 +13,10 @@ router.get('/within-4-7-days-expiring',auth,MemberController.expiringWithin4To7D
 router.get('/expired-member',auth,MemberController.expiredMember);
 router.get('/inactive-member',auth,MemberController.inActiveMember);
 
-router.get('/get-member/:id',auth,MemberController.getMemberDetails);
+router.get('/get-member/:id',auth, MemberController.getMemberDetails);
 router.post('/change-status/:id',auth, MemberController.changeStatus);
 router.put('/update-member-plan/:id',auth, MemberController.updateMemberPlan);
-
-
+router.put('/update-member-trainer/:id', auth, MemberController.updateMemberTrainer);
+router.delete('/delete-member/:id', auth, MemberController.deleteMember);
 
 module.exports = router;
