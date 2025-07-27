@@ -20,7 +20,7 @@ const Signup = () => {
     email: "",
     userName: "",
     password: "",
-    profilePic: "https://colorlib.com/wp/wp-content/uploads/sites/2/klipsan-squarespace-gym-website.jpg"
+    profilePic: "https://tinyurl.com/mpc827ak"
   });
 
   const handleOnChange = (event, name) => {
@@ -60,7 +60,7 @@ const Signup = () => {
   }
 
   return (
-    <div className="signup-container w-[80%] sm:w-[70%] md:w-[60%] lg:w-1/3 h-auto lg:h-[500px] p-6 mt-10 bg-gradient-to-br from-gray-900 to-gray-800 rounded-xl shadow-xl overflow-y-auto max-h-[90vh]">
+    <div className="signup-container w-[80%] sm:w-[90%] md:w-[90%] lg:w-1/3 h-auto lg:h-[500px] p-6 mt-10 bg-gradient-to-br from-gray-900 to-gray-800 rounded-xl shadow-xl overflow-y-auto max-h-[90vh]">
       <div className="font-sans text-white text-center text-4xl font-bold mb-8 border-b border-gray-600 pb-4">
         Register Your Gym
       </div>
