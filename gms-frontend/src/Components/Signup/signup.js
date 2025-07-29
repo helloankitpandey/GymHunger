@@ -1,18 +1,12 @@
 import React, { useState } from "react";
-import './signup.css';
-import Modal from "../Modal/modal";
-import ForgetPassword from "../ForgetPassword/forgetpassword";
-import axios from 'axios';
-import Stack from '@mui/material/Stack';
-import LinearProgress from '@mui/material/LinearProgress';
+import "./signup.css";
+import axios from "axios";
+import Stack from "@mui/material/Stack";
+import LinearProgress from "@mui/material/LinearProgress";
 import { ToastContainer, toast } from "react-toastify";
 
 const Signup = () => {
-
-  // backend url
   const backendURL = process.env.REACT_APP_BACKEND_API;
-
-  const [forgetPassword, setForgetPassword] = useState(false);
   const [loaderImg, setLoaderImg] = useState(false);
 
   const [inputField, setInputField] = useState({
@@ -20,47 +14,48 @@ const Signup = () => {
     email: "",
     userName: "",
     password: "",
-    profilePic: "https://tinyurl.com/mpc827ak"
+    profilePic: "https://tinyurl.com/mpc827ak",
   });
 
   const handleOnChange = (event, name) => {
     setInputField({ ...inputField, [name]: event.target.value });
-  }
-
-  const handleClose = () => {
-    setForgetPassword(prev => !prev);
-  }
+  };
 
   const uploadImage = async (event) => {
     setLoaderImg(true);
     const files = event.target.files;
     const data = new FormData();
-    data.append('file', files[0]);
-    data.append('upload_preset', 'gym-managment');
+    data.append("file", files[0]);
+    data.append("upload_preset", "gym-managment");
+
     try {
-      const response = await axios.post("https://api.cloudinary.com/v1_1/dw7n1fvp0/image/upload", data);
+      const response = await axios.post(
+        "https://api.cloudinary.com/v1_1/dw7n1fvp0/image/upload",
+        data
+      );
       const imageUrl = response.data.url;
-      setInputField({ ...inputField, ['profilePic']: imageUrl });
+      setInputField({ ...inputField, profilePic: imageUrl });
       setLoaderImg(false);
     } catch (error) {
       console.log(error);
       setLoaderImg(false);
     }
-  }
+  };
 
   const handleRegister = async () => {
-    axios.post(`${backendURL}/auth/register`, inputField).then((res) => {
+    try {
+      const res = await axios.post(`${backendURL}/auth/register`, inputField);
       const successMsg = res.data.message;
       toast.success(successMsg);
-    }).catch(err => {
-      const errorMessage = err.response.data.error;
+    } catch (err) {
+      const errorMessage = err.response?.data?.error || "Registration failed";
       console.log(err);
       toast.error(errorMessage);
-    });
-  }
+    }
+  };
 
   return (
-    <div className="signup-container w-[80%] sm:w-[90%] md:w-[90%] lg:w-1/3 h-auto lg:h-[500px] p-6 mt-10 bg-gradient-to-br from-gray-900 to-gray-800 rounded-xl shadow-xl overflow-y-auto max-h-[90vh]">
+    <div className="signup-container w-[95%] sm:w-[90%] md:w-[90%] lg:w-1/3 h-auto lg:h-[500px] p-6 mt-10 bg-gradient-to-br from-gray-900 to-gray-800 rounded-xl shadow-xl overflow-y-auto max-h-[90vh]">
       <div className="font-sans text-white text-center text-4xl font-bold mb-8 border-b border-gray-600 pb-4">
         Register Your Gym
       </div>
@@ -104,7 +99,7 @@ const Signup = () => {
       />
 
       {loaderImg && (
-        <Stack sx={{ width: '100%', color: 'grey.500' }} spacing={2}>
+        <Stack sx={{ width: "100%", color: "grey.500" }} spacing={2}>
           <LinearProgress color="secondary" />
         </Stack>
       )}
@@ -124,22 +119,7 @@ const Signup = () => {
         Register
       </div>
 
-      <div
-        onClick={handleClose}
-        className="p-3 w-full bg-blue-600 rounded-lg text-white text-center text-lg hover:bg-blue-500 font-semibold transition-colors duration-200 cursor-pointer"
-      >
-        Forget Password
-      </div>
-
       <ToastContainer />
-
-      {forgetPassword && (
-        <Modal
-          header="Forget Password"
-          handleClose={handleClose}
-          content={<ForgetPassword handleClose={handleClose} />}
-        />
-      )}
     </div>
   );
 };
