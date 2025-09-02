@@ -9,6 +9,7 @@ const Login = () => {
   const [loginField, setLoginField] = useState({
     userName: "",
     password: "",
+    role: "gym",
   });
   const [forgetPassword, setForgetPassword] = useState(false);
   const navigate = useNavigate();
@@ -28,7 +29,14 @@ const Login = () => {
       localStorage.setItem("gymId", res.data.gym._id);
       localStorage.setItem("isLogin", true);
       localStorage.setItem("token", res.data.token);
-      navigate("/dashboard");
+      localStorage.setItem("userRole", res.data.gym.role);
+      
+      // Redirect based on role
+      if (res.data.gym.role === 'user') {
+        navigate("/user-home");
+      } else {
+        navigate("/dashboard");
+      }
     } catch (err) {
       const errorMessage = err.response?.data?.error || "Login failed";
       toast.error(errorMessage);
@@ -44,6 +52,16 @@ const Login = () => {
       <div className="font-sans text-white text-center text-4xl font-bold mb-9 border-b border-gray-600 pb-4">
         Login
       </div>
+
+      <select
+        name="role"
+        value={loginField.role || "gym"}
+        onChange={(event) => handleOnChange(event, "role")}
+        className="w-full mb-6 p-3 rounded-lg bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+      >
+        <option value="gym">Gym Owner/Admin</option>
+        <option value="user">Regular User</option>
+      </select>
 
       <input
         value={loginField.userName}

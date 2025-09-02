@@ -8,6 +8,7 @@ import { ToastContainer, toast } from "react-toastify";
 const Signup = () => {
   const backendURL = process.env.REACT_APP_BACKEND_API;
   const [loaderImg, setLoaderImg] = useState(false);
+  const [userType, setUserType] = useState("gym"); // 'gym' or 'user'
 
   const [inputField, setInputField] = useState({
     gymName: "",
@@ -15,6 +16,7 @@ const Signup = () => {
     userName: "",
     password: "",
     profilePic: "https://tinyurl.com/mpc827ak",
+    role: "gym",
   });
 
   const handleOnChange = (event, name) => {
@@ -44,7 +46,14 @@ const Signup = () => {
 
   const handleRegister = async () => {
     try {
-      const res = await axios.post(`${backendURL}/auth/register`, inputField);
+      // Set role based on user type selection and handle gymName for users
+      const registrationData = {
+        ...inputField,
+        role: userType,
+        gymName: userType === 'user' ? 'User Account' : inputField.gymName
+      };
+      
+      const res = await axios.post(`${backendURL}/auth/register`, registrationData);
       const successMsg = res.data.message;
       toast.success(successMsg);
     } catch (err) {
@@ -57,7 +66,31 @@ const Signup = () => {
   return (
     <div className="signup-container w-[95%] sm:w-[90%] md:w-[90%] lg:w-1/3 h-auto lg:h-[500px] p-6 mt-10 bg-gradient-to-br from-gray-900 to-gray-800 rounded-xl shadow-xl overflow-y-auto max-h-[90vh]">
       <div className="font-sans text-white text-center text-4xl font-bold mb-8 border-b border-gray-600 pb-4">
-        Register Your Gym
+        Register
+      </div>
+
+      {/* User Type Toggle */}
+      <div className="flex mb-6 bg-gray-700 rounded-lg p-1">
+        <button
+          onClick={() => setUserType("gym")}
+          className={`flex-1 py-2 rounded-lg font-semibold transition-colors ${
+            userType === "gym" 
+              ? "bg-blue-600 text-white" 
+              : "bg-transparent text-gray-300 hover:bg-gray-600"
+          }`}
+        >
+          Gym Owner
+        </button>
+        <button
+          onClick={() => setUserType("user")}
+          className={`flex-1 py-2 rounded-lg font-semibold transition-colors ${
+            userType === "user" 
+              ? "bg-blue-600 text-white" 
+              : "bg-transparent text-gray-300 hover:bg-gray-600"
+          }`}
+        >
+          User
+        </button>
       </div>
 
       <input
@@ -68,13 +101,15 @@ const Signup = () => {
         placeholder="Enter Email"
       />
 
-      <input
-        value={inputField.gymName}
-        onChange={(event) => handleOnChange(event, "gymName")}
-        type="text"
-        className="w-full mb-6 p-3 rounded-lg bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        placeholder="Enter Gym Name"
-      />
+      {userType === "gym" && (
+        <input
+          value={inputField.gymName}
+          onChange={(event) => handleOnChange(event, "gymName")}
+          type="text"
+          className="w-full mb-6 p-3 rounded-lg bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder="Enter Gym Name"
+        />
+      )}
 
       <input
         value={inputField.userName}
@@ -111,6 +146,7 @@ const Signup = () => {
           alt="Profile Preview"
         />
       )}
+
 
       <div
         onClick={handleRegister}
