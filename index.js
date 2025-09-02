@@ -42,10 +42,12 @@ const MembershipRoutes = require('./Routes/membership');
 const MemberRoutes = require('./Routes/member');
 const TrainerRoutes = require('./Routes/trainer');
 
+
 app.use('/auth', GymRoutes);
 app.use('/plans', MembershipRoutes);
 app.use('/members', MemberRoutes);
 app.use('/trainers', TrainerRoutes);
+
 
 // Start the server and listen on the specified port
 // Once running, it will log the message in the console

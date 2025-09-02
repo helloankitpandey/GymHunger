@@ -7,7 +7,7 @@ const jwt = require('jsonwebtoken');
 
 exports.register = async(req,res)=>{
     try {
-        const {userName,password,gymName,profilePic,email}=req.body;
+        const {userName,password,gymName,profilePic,email,role}=req.body;
 
         const isExist = await Gym.findOne({userName});
         if(isExist){
@@ -15,8 +15,8 @@ exports.register = async(req,res)=>{
                 error:"Username Already Exist , Please try with other username"
             })
         }else{
-            const hashedPassword = await bcrypt.hash(password,10)   
-            const newGym = new Gym({userName,password:hashedPassword,gymName,profilePic,email});
+            const hashedPassword = await bcrypt.hash(password,10)
+            const newGym = new Gym({userName,password:hashedPassword,gymName,profilePic,email,role: role || 'gym'});
             await newGym.save();
 
             res.status(201).json({
@@ -28,7 +28,7 @@ exports.register = async(req,res)=>{
     } catch (error) {
         // Added console for debug
         // console.log(error);
-        
+
         res.status(500).json({
             error:"Server Error"
         })
@@ -50,10 +50,10 @@ exports.login = async(req,res)=>{
 
         if(gym && await bcrypt.compare(password,gym.password)){
 
-            //  another way 
+            //  another way
             // const hashedPassword = await bcrypt.compare(password,gym.password);
 
-            const token = jwt.sign({gym_id:gym._id},process.env.JWT_SECRET_KEY);
+            const token = jwt.sign({gym_id:gym._id, role: gym.role},process.env.JWT_SECRET_KEY);
             // console.log("jwtToken:",token);
              res.cookie("cookie-token",token,cookieOptions) ;
 
@@ -69,9 +69,9 @@ exports.login = async(req,res)=>{
     } catch (error) {
         // Added console for debug
         // console.log(error);
-        
+
         res.status(500).json({
-            
+
             error:"Server Error"
         })
     }
@@ -90,7 +90,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-//  otp sending function 
+//  otp sending function
 
 exports.sendOtp = async(req,res)=>{
     try {
@@ -98,11 +98,11 @@ exports.sendOtp = async(req,res)=>{
         const gym = await Gym.findOne({email});
         if(gym){
             const  buffer = crypto.randomBytes(4);   // get random bytes
-            const token = buffer.readUInt32BE(0)%900000+100000; // modulo to get a 6-digit number 
+            const token = buffer.readUInt32BE(0)%900000+100000; // modulo to get a 6-digit number
             gym.resetPasswordToken=token;
             gym.resetPasswordExpires = Date.now()+3600000; // 1hr valid
             gym.save();
-            //  for mail sending 
+            //  for mail sending
             const mailOptions={
                 from : "samarpratapjnv046@gmail.com",
                 to : email,
@@ -113,14 +113,14 @@ exports.sendOtp = async(req,res)=>{
                       This OTP will expire in 60 minutes.
                       If you didn’t request this, please ignore this email.
                       Your OTP is-
-                      
+
                       ${token}.
 
-                      Thank You 
+                      Thank You
                       [GymHunger Team]
                 `
             };
-            // usse of the transportor 
+            // usse of the transportor
             transporter.sendMail(mailOptions, (error, info) => {
             if(error){
                 res.status(500).json({
@@ -167,7 +167,7 @@ exports.checkOtp = async(req,res)=>{
     } catch (error) {
        res.status(500).json({
          error : " server Error"
-       }) 
+       })
     }
 }
 
@@ -192,7 +192,7 @@ exports.resetPassword = async (req,res)=>{
     } catch (error) {
         res.status(500).json({
          error : " server Error"
-       }) 
+       })
     }
 }
 
@@ -215,7 +215,7 @@ exports.updateGymProfilePic = async (req, res) => {
         await gym.save();
 
         res.status(200).json({ message: "Profile picture updated successfully", profilePic: gym.profilePic });
-        
+
     } catch (error) {
         console.error("Error updating gym profile picture:", error);
         res.status(500).json({ error: "Server Error" });
@@ -227,3 +227,21 @@ exports.logout = async()=>{
         message:'Logged out successfully !!'
     })
 }
+
+exports.getAllGyms = async (req, res) => {
+    try {
+        const gyms = await Gym.find({ role: 'gym' }).select('-password -resetPasswordToken -resetPasswordExpires');
+
+        res.status(200).json({
+            success: true,
+            message: "Gyms fetched successfully",
+            data: gyms
+        });
+    } catch (error) {
+        console.error("Error fetching gyms:", error);
+        res.status(500).json({
+            error: "Server Error",
+            message: "Failed to fetch gyms"
+        });
+    }
+};

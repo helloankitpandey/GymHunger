@@ -10,9 +10,11 @@ router.post('/login', GymController.login);
 router.post('/reset-password/sendOtp', GymController.sendOtp);
 router.post('/reset-password/checkOtp', GymController.checkOtp);
 router.post('/reset-password', GymController.resetPassword);
-router.post('/logout', GymController.logout);
 
 // Protected Route (requires authentication)
 router.put('/update-gym-profile-pic/:id', auth, GymController.updateGymProfilePic);
+
+// Public Route to get all gyms
+router.get('/', GymController.getAllGyms);
 
 module.exports = router;

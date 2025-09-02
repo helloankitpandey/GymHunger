@@ -34,6 +34,38 @@ const gymSchema = mongoose.Schema(
             required: true,
         },
 
+        // Description of the gym (optional)
+        description: {
+            type: String,
+            default: "No description available",
+        },
+
+        // Gym functionality/features (optional)
+        functionality: {
+            type: String,
+            default: "Standard gym facilities",
+        },
+
+        // Contact number (optional)
+        contactNumber: {
+            type: String,
+            default: "Not provided",
+        },
+
+        // Address of the gym (optional)
+        address: {
+            type: String,
+            default: "Not provided",
+        },
+
+        // Role of the user: 'gym' or 'user'
+        role: {
+            type: String,
+            enum: ['gym', 'user'],
+            default: 'gym',
+            required: true,
+        },
+
         // Token for password reset functionality (optional)
         resetPasswordToken: {
             type: String,
